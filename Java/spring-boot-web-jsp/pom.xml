@@ -34,7 +34,8 @@
 		<!-- JSTL para JSP -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
-			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
 		</dependency>
 		
 		<!-- Para compilar JSP -->
