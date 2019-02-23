@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Repository;
 
@@ -21,7 +20,6 @@ public class ClientDaoImpl implements IClientDao {
   private EntityManager entityManager;
   
   @SuppressWarnings("unchecked")
-  @Transactional
   @Override
   public List<Client> findAll() {
     return entityManager.createQuery(FROM_CLIENTS).getResultList();
