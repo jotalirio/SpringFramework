@@ -14,7 +14,7 @@ import com.example.springboot.app.utils.Constants;
 @Repository
 public class ClientDaoImpl implements IClientDao {
 
-  private static final String FROM_CLIENTS = Constants.FROM + Constants.BLANK + Constants.TABLE_CLIENTS;
+  private static final String FROM_CLIENT = Constants.FROM + Constants.BLANK + Constants.ENTITY_CLIENT;
   
   @PersistenceContext
   private EntityManager entityManager;
@@ -22,7 +22,7 @@ public class ClientDaoImpl implements IClientDao {
   @SuppressWarnings("unchecked")
   @Override
   public List<Client> findAll() {
-    return entityManager.createQuery(FROM_CLIENTS).getResultList();
+    return entityManager.createQuery(FROM_CLIENT).getResultList();
   }
 
 }

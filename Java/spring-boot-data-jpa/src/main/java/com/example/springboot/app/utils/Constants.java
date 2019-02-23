@@ -12,8 +12,11 @@ public interface Constants {
   public static final String VIEW_LIST = "list";  
   
   /***** Daos *****/
-  // Queries
+  // Queries words
   public static final String FROM = "FROM";
+  
+  // Entity
+  public static final String ENTITY_CLIENT = "Client";
   
   // Table 'Clients'
   public static final String TABLE_CLIENTS = "Clients";
