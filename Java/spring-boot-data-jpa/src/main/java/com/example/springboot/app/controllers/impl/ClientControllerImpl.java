@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -51,6 +52,24 @@ public class ClientControllerImpl implements IClientController {
     }
     this.clientService.save(client);
     return "redirect:" + Constants.VIEW_LIST;
+  }
+
+  @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
+  @Override
+  public String edit(@PathVariable(value = "id") Long id, Map<String, Object> model) {
+    // Getting the Client to be updated
+    Client client = null;
+    // Client exists
+    if(id > 0) {
+      client = this.clientService.findOne(id);
+    }
+    else { 
+      // Client does not exist
+      return "redirect:" + Constants.VIEW_LIST;
+    }
+    model.put(Constants.ATTRIBUTE_TITLE_KEY, Constants.ATTRIBUTE_TITLE_VALUE_EDIT_CLIENT);
+    model.put(Constants.ATTRIBUTE_CLIENT_KEY, client);
+    return Constants.VIEW_CREATE;
   }
 
 }

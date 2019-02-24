@@ -27,7 +27,19 @@ public class ClientDaoImpl implements IClientDao {
 
   @Override
   public void save(Client client) {
-    entityManager.persist(client);
+    if(client != null && client.getId() != null && client.getId() > 0) {
+      // Updating a existing Client
+      entityManager.merge(client);
+    }
+    else {
+      // Creating a new Client
+      entityManager.persist(client);
+    }
+  }
+
+  @Override
+  public Client findOne(Long id) {
+    return entityManager.find(Client.class, id);
   }
 
 }

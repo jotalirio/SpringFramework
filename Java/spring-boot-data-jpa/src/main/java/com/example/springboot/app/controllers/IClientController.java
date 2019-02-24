@@ -13,4 +13,5 @@ public interface IClientController {
   public String listClients(Model model);
   public String create(Map<String, Object> model);
   public String save(Client client, BindingResult result, Model model);
+  public String edit(Long id, Map<String, Object> model);
 }

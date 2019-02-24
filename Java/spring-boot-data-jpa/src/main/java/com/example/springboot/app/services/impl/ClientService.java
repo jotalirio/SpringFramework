@@ -28,4 +28,9 @@ public class ClientService implements IClientService {
     clientDao.save(client);
   }
 
+  @Override
+  public Client findOne(Long id) {
+    return clientDao.findOne(id);
+  }
+
 }
