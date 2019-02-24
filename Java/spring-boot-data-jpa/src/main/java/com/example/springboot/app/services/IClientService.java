@@ -8,4 +8,5 @@ public interface IClientService {
   
   // abstract method
   public List<Client> getClients();
+  public void save(Client client);
 }

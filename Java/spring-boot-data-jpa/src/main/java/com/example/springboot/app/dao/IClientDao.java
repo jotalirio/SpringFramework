@@ -8,4 +8,5 @@ public interface IClientDao {
 
   // abstract method
   public List<Client> findAll();
+  public void save(Client client);
 }

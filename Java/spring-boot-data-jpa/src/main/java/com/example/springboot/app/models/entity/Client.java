@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -30,6 +31,12 @@ public class Client implements Serializable {
   @Temporal(TemporalType.DATE)
   public Date creationDate;
   
+  @PrePersist
+  public void prePersist() {
+    this.creationDate = new Date();
+  }
+  
+  /* Getters and Setters */
   public Long getId() {
     return id;
   }

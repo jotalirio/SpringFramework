@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8">
 <title th:text="${title}">Insert title here</title>
 <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
@@ -18,37 +18,40 @@
 		<div class="collapse navbar-collapse">
 			<ul class="navbar-nav mr-auto">
 				<li class="nav-item active"><a class="nav-link" href="#">Home</a></li>
-				<li class="nav-item"><a class="nav-link" href="#" th:href="@{/list}">Clients</a></li>
+				<li class="nav-item"><a class="nav-link" href="#"
+					th:href="@{/listar}">Clients</a></li>
 			</ul>
 		</div>
 	</nav>
 	<div class="container">
 		<br>
-		<h1 class="text-secondary border border-success border-top-0 border-left-0 border-right-0" th:text="${title}"></h1>
+		<h1 th:text="${title}"
+			class="text-secondary border border-success border-top-0 border-left-0 border-right-0"></h1>
 		<br>
-		<a th:href="@{/create}">New Client</a>
-		<br>
-		<br>
-		<table class="table table-striped table-bordered">
-			<thead class="thead-inverse">
+		<form th:action="@{/create}" th:object="${client}" method="post">
+			<table>
 				<tr>
-					<th>Id</th>
-					<th>Name</th>
-					<th>Surname</th>
-					<th>Email</th>
-					<th>Creation Date</th>
+					<td>Name</td>
+					<td><input type="text" th:field="*{name}" class="form-group" /></td>
 				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="client: ${clients}">
-					<td th:text="${client.id}"></td>
-					<td th:text="${client.name}"></td>
-					<td th:text="${client.surname}"></td>
-					<td th:text="${client.email}"></td>
-					<td th:text="${client.creationDate}"></td>
+				<tr>
+					<td>Surname</td>
+					<td><input type="text" th:field="*{surname}"
+						class="form-group" /></td>
 				</tr>
-			</tbody>
-		</table>
+				<tr>
+					<td>Email</td>
+					<td><input type="email" th:field="*{email}" class="form-group" /></td>
+				</tr>
+				<tr>
+					<td>
+						<br> 
+						<input type="submit" value="Create" class="btn btn-primary" />
+					</td>
+				</tr>
+			</table>
+			<input type="hidden" th:field="*{id}" />
+		</form>
 	</div>
 </body>
 </html>

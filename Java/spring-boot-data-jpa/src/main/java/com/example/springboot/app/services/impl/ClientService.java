@@ -22,4 +22,10 @@ public class ClientService implements IClientService {
     return clientDao.findAll();
   }
 
+  @Transactional
+  @Override
+  public void save(Client client) {
+    clientDao.save(client);
+  }
+
 }

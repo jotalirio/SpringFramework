@@ -25,4 +25,9 @@ public class ClientDaoImpl implements IClientDao {
     return entityManager.createQuery(FROM_CLIENT).getResultList();
   }
 
+  @Override
+  public void save(Client client) {
+    entityManager.persist(client);
+  }
+
 }

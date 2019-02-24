@@ -6,10 +6,13 @@ public interface Constants {
   public static final String BLANK = " ";
   
   /***** Controllers *****/
-  public static final String ATTRIBUTE_TITLE = "title";
-  public static final String CLIENTS_LIST = "List of Clients";
-  public static final String ATTRIBUTE_CLIENTS = "clients";
+  public static final String ATTRIBUTE_TITLE_KEY = "title";
+  public static final String ATTRIBUTE_TITLE_VALUE_LIST_CLIENTS = "List of Clients";
+  public static final String ATTRIBUTE_TITLE_VALUE_NEW_CLIENT = "New Client";
+  public static final String ATTRIBUTE_CLIENTS_KEY = "clients";
+  public static final String ATTRIBUTE_CLIENT_KEY = "client";
   public static final String VIEW_LIST = "list";  
+  public static final String VIEW_CREATE = "create"; 
   
   /***** Daos *****/
   // Queries words
@@ -20,5 +23,6 @@ public interface Constants {
   
   // Table 'Clients'
   public static final String TABLE_CLIENTS = "Clients";
-  
+
+
 }
