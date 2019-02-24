@@ -3,9 +3,12 @@ package com.example.springboot.app.controllers.impl;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -40,7 +43,11 @@ public class ClientControllerImpl implements IClientController {
 
   @RequestMapping(value = "/create", method = RequestMethod.POST)
   @Override
-  public String save(Client client) {
+  public String save(@Valid Client client, BindingResult result) {
+    // If the form data has errors, return to the create View showing the form
+    if(result.hasErrors()) {
+      return Constants.VIEW_CREATE;
+    }
     this.clientService.save(client);
     return "redirect:" + Constants.VIEW_LIST;
   }
