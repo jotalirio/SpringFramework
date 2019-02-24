@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.springboot.app.dao.IClientDao;
 import com.example.springboot.app.dao.IClientDaoCrudRepository;
 import com.example.springboot.app.models.entity.Client;
 
