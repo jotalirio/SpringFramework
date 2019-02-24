@@ -8,6 +8,7 @@ public interface IClientService {
   
   // abstract methods
   public List<Client> getClients();
-  public void save(Client client);
   public Client findOne(Long id);
+  public void save(Client client);
+  public void delete(Long id);
 }

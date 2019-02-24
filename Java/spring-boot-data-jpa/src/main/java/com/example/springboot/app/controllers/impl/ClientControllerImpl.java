@@ -79,4 +79,14 @@ public class ClientControllerImpl implements IClientController {
     return Constants.VIEW_CREATE;
   }
 
+  @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
+  @Override
+  public String delete(@PathVariable(value = "id") Long id) {
+    // Client exists
+    if(id > 0) {
+      this.clientService.delete(id);
+    }
+    return "redirect:/" + Constants.VIEW_LIST;
+  }
+
 }

@@ -26,6 +26,11 @@ public class ClientDaoImpl implements IClientDao {
   }
 
   @Override
+  public Client findOne(Long id) {
+    return entityManager.find(Client.class, id);
+  }
+  
+  @Override
   public void save(Client client) {
     if(client != null && client.getId() != null && client.getId() > 0) {
       // Updating a existing Client
@@ -38,8 +43,8 @@ public class ClientDaoImpl implements IClientDao {
   }
 
   @Override
-  public Client findOne(Long id) {
-    return entityManager.find(Client.class, id);
+  public void delete(Long id) {
+    entityManager.remove(this.findOne(id));
   }
 
 }

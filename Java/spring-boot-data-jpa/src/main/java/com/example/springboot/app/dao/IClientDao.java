@@ -8,6 +8,7 @@ public interface IClientDao {
 
   // abstract methods
   public List<Client> findAll();
-  public void save(Client client);
   public Client findOne(Long id);
+  public void save(Client client);
+  public void delete(Long id);
 }

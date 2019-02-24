@@ -15,4 +15,5 @@ public interface IClientController {
   public String create(Map<String, Object> model);
   public String save(Client client, BindingResult result, Model model, SessionStatus sessionStatus);
   public String edit(Long id, Map<String, Object> model);
+  public String delete(Long id);
 }

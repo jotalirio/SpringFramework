@@ -19,19 +19,25 @@ public class ClientService implements IClientService {
   @Transactional(readOnly = true)
   @Override
   public List<Client> getClients() {
-    return clientDao.findAll();
-  }
-
-  @Transactional
-  @Override
-  public void save(Client client) {
-    clientDao.save(client);
+    return this.clientDao.findAll();
   }
 
   @Transactional(readOnly = true)
   @Override
   public Client findOne(Long id) {
-    return clientDao.findOne(id);
+    return this.clientDao.findOne(id);
+  }
+  
+  @Transactional
+  @Override
+  public void save(Client client) {
+    this.clientDao.save(client);
+  }
+
+  @Transactional
+  @Override
+  public void delete(Long id) {
+    this.clientDao.delete(id);
   }
 
 }
