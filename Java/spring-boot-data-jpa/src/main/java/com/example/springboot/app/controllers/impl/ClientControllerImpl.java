@@ -12,6 +12,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 
 import com.example.springboot.app.controllers.IClientController;
 import com.example.springboot.app.models.entity.Client;
@@ -19,6 +21,9 @@ import com.example.springboot.app.services.IClientService;
 import com.example.springboot.app.utils.Constants;
 
 @Controller
+// We are storing in the Session the client entity when we create new Client or update an existing one
+// In this way, we remove the input type = hidden with the Client´s id from the Form in the create.html file
+@SessionAttributes(Constants.ATTRIBUTE_CLIENT_KEY) 
 public class ClientControllerImpl implements IClientController {
 
   @Autowired
@@ -44,13 +49,15 @@ public class ClientControllerImpl implements IClientController {
 
   @RequestMapping(value = "/create", method = RequestMethod.POST)
   @Override
-  public String save(@Valid Client client, BindingResult result, Model model) {
+  public String save(@Valid Client client, BindingResult result, Model model, SessionStatus sessionStatus) {
     model.addAttribute(Constants.ATTRIBUTE_TITLE_KEY, Constants.ATTRIBUTE_TITLE_VALUE_NEW_CLIENT);
     // If the form data has errors, return to the create View showing the form
     if(result.hasErrors()) {
       return Constants.VIEW_CREATE;
     }
     this.clientService.save(client);
+    // We clean the Client object from the Session after save it
+    sessionStatus.setComplete();
     return "redirect:" + Constants.VIEW_LIST;
   }
 
