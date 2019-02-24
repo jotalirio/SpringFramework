@@ -1,4 +1,4 @@
-package com.example.springboot.app.dao.impl;
+package com.example.springboot.app.dao;
 
 import java.util.List;
 
@@ -7,7 +7,6 @@ import javax.persistence.PersistenceContext;
 
 import org.springframework.stereotype.Repository;
 
-import com.example.springboot.app.dao.IClientDao;
 import com.example.springboot.app.models.entity.Client;
 import com.example.springboot.app.utils.Constants;
 

@@ -1,4 +1,4 @@
-package com.example.springboot.app.services.impl;
+package com.example.springboot.app.services;
 
 import java.util.List;
 
@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.springboot.app.dao.IClientDao;
 import com.example.springboot.app.models.entity.Client;
-import com.example.springboot.app.services.IClientService;
 
 @Service
 public class ClientService implements IClientService {

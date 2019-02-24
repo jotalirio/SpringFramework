@@ -1,4 +1,4 @@
-package com.example.springboot.app.controllers.impl;
+package com.example.springboot.app.controllers;
 
 import java.util.List;
 import java.util.Map;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
-import com.example.springboot.app.controllers.IClientController;
 import com.example.springboot.app.models.entity.Client;
 import com.example.springboot.app.services.IClientService;
 import com.example.springboot.app.utils.Constants;
