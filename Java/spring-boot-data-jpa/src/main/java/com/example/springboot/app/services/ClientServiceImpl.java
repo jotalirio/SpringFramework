@@ -10,7 +10,7 @@ import com.example.springboot.app.dao.IClientDao;
 import com.example.springboot.app.models.entity.Client;
 
 @Service
-public class ClientService implements IClientService {
+public class ClientServiceImpl implements IClientService {
 
   @Autowired
   private IClientDao clientDao;
