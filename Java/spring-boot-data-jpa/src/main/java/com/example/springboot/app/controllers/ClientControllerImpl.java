@@ -2,6 +2,7 @@ package com.example.springboot.app.controllers;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -64,7 +65,7 @@ public class ClientControllerImpl implements IClientController {
   @Override
   public String edit(@PathVariable(value = "id") Long id, Map<String, Object> model) {
     // Getting the Client to be updated
-    Client client = null;
+    Optional<Client> client = null;
     // Client exists
     if(id > 0) {
       client = this.clientService.findOne(id);
@@ -74,7 +75,7 @@ public class ClientControllerImpl implements IClientController {
       return "redirect:" + Constants.VIEW_LIST;
     }
     model.put(Constants.ATTRIBUTE_TITLE_KEY, Constants.ATTRIBUTE_TITLE_VALUE_EDIT_CLIENT);
-    model.put(Constants.ATTRIBUTE_CLIENT_KEY, client);
+    model.put(Constants.ATTRIBUTE_CLIENT_KEY, (client.isPresent()) ? client : client.orElse(new Client()));
     return Constants.VIEW_CREATE;
   }
 
