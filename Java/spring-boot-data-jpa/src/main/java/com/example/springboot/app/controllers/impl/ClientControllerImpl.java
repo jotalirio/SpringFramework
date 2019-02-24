@@ -43,7 +43,8 @@ public class ClientControllerImpl implements IClientController {
 
   @RequestMapping(value = "/create", method = RequestMethod.POST)
   @Override
-  public String save(@Valid Client client, BindingResult result) {
+  public String save(@Valid Client client, BindingResult result, Model model) {
+    model.addAttribute(Constants.ATTRIBUTE_TITLE_KEY, Constants.ATTRIBUTE_TITLE_VALUE_NEW_CLIENT);
     // If the form data has errors, return to the create View showing the form
     if(result.hasErrors()) {
       return Constants.VIEW_CREATE;

@@ -12,5 +12,5 @@ public interface IClientController {
   // abstracts methods
   public String listClients(Model model);
   public String create(Map<String, Object> model);
-  public String save(Client client, BindingResult result);
+  public String save(Client client, BindingResult result, Model model);
 }
