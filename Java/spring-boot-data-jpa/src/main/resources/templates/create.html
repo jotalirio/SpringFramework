@@ -29,27 +29,29 @@
 			class="text-secondary border border-success border-top-0 border-left-0 border-right-0"></h1>
 		<br>
 		<form th:action="@{/create}" th:object="${client}" method="post">
-			<table>
-				<tr>
-					<td>Name</td>
-					<td><input type="text" th:field="*{name}" class="form-group" /></td>
-				</tr>
-				<tr>
-					<td>Surname</td>
-					<td><input type="text" th:field="*{surname}"
-						class="form-group" /></td>
-				</tr>
-				<tr>
-					<td>Email</td>
-					<td><input type="email" th:field="*{email}" class="form-group" /></td>
-				</tr>
-				<tr>
-					<td>
-						<br> 
-						<input type="submit" value="Create" class="btn btn-primary" />
-					</td>
-				</tr>
-			</table>
+			<div class="form-group row">
+				<label for="name" class="col-sm-2 col-form-label">Name</label>
+				<div class="col-sm-6">
+					<input type="text" th:field="*{name}" class="form-control" />
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="surname" class="col-sm-2 col-form-label">Surname</label>
+				<div class="col-sm-6">
+					<input type="text" th:field="*{surname}" class="form-control" />
+				</div>
+			</div>
+			<div class="form-group row">
+				<label for="email" class="col-sm-2 col-form-label">Email</label>
+				<div class="col-sm-6">
+					<input type="email" th:field="*{email}" class="form-control" />
+				</div>
+			</div>
+			<div class="form-group row">
+				<div class="col-sm-6">
+					<input type="submit" value="Create" class="btn btn-primary" />
+				</div>
+			</div>
 			<input type="hidden" th:field="*{id}" />
 		</form>
 	</div>
