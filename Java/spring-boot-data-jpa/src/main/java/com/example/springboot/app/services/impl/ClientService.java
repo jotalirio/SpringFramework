@@ -28,6 +28,7 @@ public class ClientService implements IClientService {
     clientDao.save(client);
   }
 
+  @Transactional(readOnly = true)
   @Override
   public Client findOne(Long id) {
     return clientDao.findOne(id);
