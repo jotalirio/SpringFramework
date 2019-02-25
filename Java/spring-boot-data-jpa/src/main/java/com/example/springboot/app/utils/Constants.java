@@ -12,6 +12,10 @@ public interface Constants {
   public static final Object ATTRIBUTE_TITLE_VALUE_EDIT_CLIENT = "Edit Client";
   public static final String ATTRIBUTE_CLIENTS_KEY = "clients";
   public static final String ATTRIBUTE_CLIENT_KEY = "client";
+  public static final String ATTRIBUTE_FLASH_SUCCESS_KEY = "success";
+  public static final String ATTRIBUTE_FLASH_ERROR_KEY = "error";
+  public static final String ATTRIBUTE_FLASH_WARNING_KEY = "warning";
+  public static final String ATTRIBUTE_FLASH_INFO_KEY = "info";
   public static final String VIEW_LIST = "list";  
   public static final String VIEW_CREATE = "create"; 
   
@@ -24,5 +28,6 @@ public interface Constants {
   
   // Table 'Clients'
   public static final String TABLE_CLIENTS = "Clients";
+ 
 
 }
