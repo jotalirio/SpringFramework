@@ -1,3 +1,26 @@
 /* Populate tables: This file will be searched by JPA to populate the tables */
-INSERT INTO Clients (id, name, surname, email, creation_date) VALUES(1, 'Jane', 'Doe', 'jane.doe@gmail.com', '2019-02-23');
-INSERT INTO Clients (id, name, surname, email, creation_date) VALUES(2, 'John', 'Doe', 'john.doe@gmail.com', '2019-02-23');
+INSERT INTO Clients (name, surname, email, creation_date) VALUES ('Jane', 'Doe', 'jane.doe@gmail.com', '2019-02-23');
+INSERT INTO Clients (name, surname, email, creation_date) VALUES ('John', 'Doe', 'john.doe@gmail.com', '2019-02-23');
+INSERT INTO Clients (name, surname, email, creation_date) VALUES ('Linus', 'Torvalds', 'linus.torvalds@gmail.com', '2017-08-03');
+INSERT INTO Clients (name, surname, email, creation_date) VALUES ('Jane', 'Doe', 'jane.doe@gmail.com', '2017-08-04');
+INSERT INTO Clients (name, surname, email, creation_date) VALUES ('Rasmus', 'Lerdorf', 'rasmus.lerdorf@gmail.com', '2017-08-05');
+INSERT INTO Clients (name, surname, email, creation_date) VALUES ('Erich', 'Gamma', 'erich.gamma@gmail.com', '2017-08-06');
+INSERT INTO Clients (name, surname, email, creation_date) VALUES ('Richard', 'Helm', 'richard.helm@gmail.com', '2017-08-07');
+INSERT INTO Clients (name, surname, email, creation_date) VALUES ('Ralph', 'Johnson', 'ralph.johnson@gmail.com', '2017-08-08');
+INSERT INTO Clients (name, surname, email, creation_date) VALUES ('John', 'Vlissides', 'john.vlissides@gmail.com', '2017-08-09');
+INSERT INTO Clients (name, surname, email, creation_date) VALUES ('James', 'Gosling', 'james.gosling@gmail.com', '2017-08-010');
+INSERT INTO Clients (name, surname, email, creation_date) VALUES ('Bruce', 'Lee', 'bruce.lee@gmail.com', '2017-08-11');
+INSERT INTO Clients (name, surname, email, creation_date) VALUES ('Johnny', 'Doe', 'johnny.doe@gmail.com', '2017-08-12');
+INSERT INTO Clients (name, surname, email, creation_date) VALUES ('John', 'Roe', 'john.roe@gmail.com', '2017-08-13');
+INSERT INTO Clients (name, surname, email, creation_date) VALUES ('Jane', 'Roe', 'jane.roe@gmail.com', '2017-08-14');
+INSERT INTO Clients (name, surname, email, creation_date) VALUES ('Richard', 'Doe', 'richard.doe@gmail.com', '2017-08-15');
+INSERT INTO Clients (name, surname, email, creation_date) VALUES ('Janie', 'Doe', 'janie.doe@gmail.com', '2017-08-16');
+INSERT INTO Clients (name, surname, email, creation_date) VALUES ('Phillip', 'Webb', 'phillip.webb@gmail.com', '2017-08-17');
+INSERT INTO Clients (name, surname, email, creation_date) VALUES ('Stephane', 'Nicoll', 'stephane.nicoll@gmail.com', '2017-08-18');
+INSERT INTO Clients (name, surname, email, creation_date) VALUES ('Sam', 'Brannen', 'sam.brannen@gmail.com', '2017-08-19');  
+INSERT INTO Clients (name, surname, email, creation_date) VALUES ('Juergen', 'Hoeller', 'juergen.Hoeller@gmail.com', '2017-08-20'); 
+INSERT INTO Clients (name, surname, email, creation_date) VALUES ('Janie', 'Roe', 'janie.roe@gmail.com', '2017-08-21');
+INSERT INTO Clients (name, surname, email, creation_date) VALUES ('John', 'Smith', 'john.smith@gmail.com', '2017-08-22');
+INSERT INTO Clients (name, surname, email, creation_date) VALUES ('Joe', 'Bloggs', 'joe.bloggs@gmail.com', '2017-08-23');
+INSERT INTO Clients (name, surname, email, creation_date) VALUES ('John', 'Stiles', 'john.stiles@gmail.com', '2017-08-24');
+INSERT INTO Clients (name, surname, email, creation_date) VALUES ('Richard', 'Roe', 'stiles.roe@gmail.com', '2017-08-25');

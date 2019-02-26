@@ -7,12 +7,16 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -20,6 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.springboot.app.models.entity.Client;
 import com.example.springboot.app.services.IClientService;
 import com.example.springboot.app.utils.Constants;
+import com.example.springboot.app.utils.paginator.PageRender;
 
 @Controller
 // We are storing in the Session the client entity when we create new Client or update an existing one
@@ -30,15 +35,27 @@ public class ClientControllerImpl implements IClientController {
   @Autowired
   IClientService clientService;
   
+//  @RequestMapping(value = "/list", method = RequestMethod.GET)
+//  @Override
+//  public String listClients(Model model) {
+//    List<Client> clients = this.clientService.getClients();
+//    model.addAttribute(Constants.ATTRIBUTE_TITLE_KEY, Constants.ATTRIBUTE_TITLE_VALUE_LIST_CLIENTS);
+//    model.addAttribute(Constants.ATTRIBUTE_CLIENTS_KEY, clients);
+//    return Constants.VIEW_LIST;
+//  }
+
   @RequestMapping(value = "/list", method = RequestMethod.GET)
   @Override
-  public String listClients(Model model) {
-    List<Client> clients = this.clientService.getClients();
+  public String listClients(@RequestParam(name = "page", defaultValue = Constants.FIRST_PAGE) int page, Model model) {
+    Pageable pageRequest = PageRequest.of(page, Constants.RESULTS_PER_PAGE);
+    Page<Client> clients = this.clientService.getClients(pageRequest);
+    PageRender<Client> pageRender = new PageRender("/list", clients);
     model.addAttribute(Constants.ATTRIBUTE_TITLE_KEY, Constants.ATTRIBUTE_TITLE_VALUE_LIST_CLIENTS);
     model.addAttribute(Constants.ATTRIBUTE_CLIENTS_KEY, clients);
+    model.addAttribute(Constants.ATTRIBUTE_PAGE_RENDER_KEY, pageRender);
     return Constants.VIEW_LIST;
   }
-
+  
   @RequestMapping(value = "/create", method = RequestMethod.GET)
   @Override
   public String create(Map<String, Object> model) {

@@ -18,6 +18,9 @@ public interface Constants {
   public static final String ATTRIBUTE_FLASH_INFO_KEY = "info";
   public static final String VIEW_LIST = "list";  
   public static final String VIEW_CREATE = "create"; 
+  public static final String FIRST_PAGE = "0";
+  public static final int RESULTS_PER_PAGE = 4;
+  public static final String ATTRIBUTE_PAGE_RENDER_KEY = "page";
   
   /***** Daos *****/
   // Queries words
@@ -28,6 +31,5 @@ public interface Constants {
   
   // Table 'Clients'
   public static final String TABLE_CLIENTS = "Clients";
- 
 
 }
