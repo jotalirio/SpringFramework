@@ -21,4 +21,5 @@ public interface IClientController {
   public String save(Client client, BindingResult result, Model model, MultipartFile photo, RedirectAttributes flash, SessionStatus sessionStatus);
   public String edit(Long id, Map<String, Object> model, RedirectAttributes flash);
   public String delete(Long id, RedirectAttributes flash);
+  public String details(Long id, Map<String, Object> model, RedirectAttributes flash);
 }

@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -142,6 +143,7 @@ public class ClientControllerImpl implements IClientController {
   public String delete(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
     // Client exists
     if(id > 0) {
+      // Fetching the client
       Optional<Client> client = this.clientService.findOne(id);
       if(!client.isPresent()) {
         // Flash attribute
@@ -158,5 +160,31 @@ public class ClientControllerImpl implements IClientController {
     }
     return "redirect:/" + Constants.VIEW_LIST;
   }
+
+  @GetMapping(value="/details/{id}")
+  @Override
+  public String details(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
+    Optional<Client> client = null;
+    // Client exists
+    if(id > 0) {
+      // Fetching the client
+      client = this.clientService.findOne(id);
+      if(!client.isPresent()) {
+        // Flash attribute
+        flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_ERROR_KEY, "The client ID does not exist in the database !!!");
+        return "redirect:/" + Constants.VIEW_LIST;
+      }
+    }
+    else {
+      // Flash attribute
+      flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_ERROR_KEY, "The client ID must not be 0 !!!");
+      return "redirect:/" + Constants.VIEW_LIST;
+    }
+    model.put(Constants.ATTRIBUTE_TITLE_KEY, Constants.ATTRIBUTE_TITLE_VALUE_CLIENT_DETAILS + client.get().getName());
+    model.put(Constants.ATTRIBUTE_CLIENT_KEY, client);
+    return Constants.VIEW_DETAILS;
+  }
+  
+  
 
 }
