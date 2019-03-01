@@ -21,6 +21,8 @@ public interface Constants {
   public static final String FIRST_PAGE = "0";
   public static final int RESULTS_PER_PAGE = 4;
   public static final String ATTRIBUTE_PAGE_RENDER_KEY = "page";
+  public static final String STATIC_RESOURCES_DIRECTORY_PATH = "src//main//resources//static";
+  public static final String UPLOADS_DIRECTORY = "/uploads";
   
   /***** Daos *****/
   // Queries words
