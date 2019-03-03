@@ -23,7 +23,9 @@
 					</thead>
 					<tbody>
 						<tr class="bg-light align-middle" th:each="client: ${clients}">
-							<td class="align-middle" th:text="${client.id}"></td>
+							<td class="align-middle">
+								<a class="btn btn-primary btn-xs" th:href="@{/details/} + ${client.id}" th:text="${client.id}"></a>
+							</td>
 							<td class="align-middle" th:text="${client.name}"></td>
 							<td class="align-middle" th:text="${client.surname}"></td>
 							<td class="align-middle" th:text="${client.email}"></td>

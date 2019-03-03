@@ -181,7 +181,7 @@ public class ClientControllerImpl implements IClientController {
       return "redirect:/" + Constants.VIEW_LIST;
     }
     model.put(Constants.ATTRIBUTE_TITLE_KEY, Constants.ATTRIBUTE_TITLE_VALUE_CLIENT_DETAILS + client.get().getName());
-    model.put(Constants.ATTRIBUTE_CLIENT_KEY, client);
+    model.put(Constants.ATTRIBUTE_CLIENT_KEY, client.get());
     return Constants.VIEW_DETAILS;
   }
   
