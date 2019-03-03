@@ -43,6 +43,7 @@ public class Client implements Serializable {
   @DateTimeFormat(pattern = "dd-MM-yyyy")
   public Date creationDate;
   
+  private String photo;
   
   /* Getters and Setters */
   public Long getId() {
@@ -74,6 +75,12 @@ public class Client implements Serializable {
   }
   public void setCreationDate(Date creationDate) {
     this.creationDate = creationDate;
+  }
+  public String getPhoto() {
+    return photo;
+  }
+  public void setPhoto(String photo) {
+    this.photo = photo;
   }
   
 }

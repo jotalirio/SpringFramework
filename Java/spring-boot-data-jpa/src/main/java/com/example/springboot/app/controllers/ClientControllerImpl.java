@@ -1,6 +1,9 @@
 package com.example.springboot.app.controllers;
 
-import java.util.List;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Optional;
 
@@ -13,12 +16,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.springboot.app.models.entity.Client;
@@ -32,6 +37,8 @@ import com.example.springboot.app.utils.paginator.PageRender;
 @SessionAttributes(Constants.ATTRIBUTE_CLIENT_KEY) 
 public class ClientControllerImpl implements IClientController {
 
+  private static final String UPLOADS_DIRECTORY_FULL_PATH = Constants.STATIC_RESOURCES_DIRECTORY_PATH + Constants.UPLOADS_DIRECTORY + Constants.UPLOADS_IMAGES_DIRECTORY;
+  
   @Autowired
   IClientService clientService;
   
@@ -45,6 +52,7 @@ public class ClientControllerImpl implements IClientController {
 //  }
 
   @RequestMapping(value = "/list", method = RequestMethod.GET)
+  @SuppressWarnings({ "unchecked", "rawtypes" })
   @Override
   public String listClients(@RequestParam(name = "page", defaultValue = Constants.FIRST_PAGE) int page, Model model) {
     Pageable pageRequest = PageRequest.of(page, Constants.RESULTS_PER_PAGE);
@@ -67,13 +75,37 @@ public class ClientControllerImpl implements IClientController {
 
   @RequestMapping(value = "/create", method = RequestMethod.POST)
   @Override
-  public String save(@Valid Client client, BindingResult result, Model model, RedirectAttributes flash, SessionStatus sessionStatus) {
+  public String save(@Valid Client client, BindingResult result, Model model, @RequestParam("file") MultipartFile photo, RedirectAttributes flash, SessionStatus sessionStatus) {
     model.addAttribute(Constants.ATTRIBUTE_TITLE_KEY, Constants.ATTRIBUTE_TITLE_VALUE_NEW_CLIENT);
     // If the form data has errors, return to the create View showing the form
     if(result.hasErrors()) {
       return Constants.VIEW_CREATE;
     }
- // Flash attribute
+    
+    // Checking the photo field
+    if(!photo.isEmpty()) {
+      
+      Path resourcesDirectory = Paths.get(UPLOADS_DIRECTORY_FULL_PATH);
+      String rootPath = resourcesDirectory.toFile().getAbsolutePath();
+      
+      try {
+        
+        byte[] bytes = photo.getBytes();
+        Path pathToPhoto = Paths.get(rootPath + "//" + photo.getOriginalFilename());
+        Files.write(pathToPhoto, bytes);
+        // Flash message
+        flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_INFO_KEY, "The photo was uploaded successfully '" + photo.getOriginalFilename() + "'");
+        // Setting the photo in Client object
+        client.setPhoto(photo.getOriginalFilename());
+        
+      } catch (IOException e) {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+      }
+      
+    }
+    
+    // Flash attribute
     String flashMessage = (client.getId() != null && client.getId() > 0) ? "The client was updated successfully !!!" : "The new client was created successfully !!!"; 
     this.clientService.save(client);
     // We clean the Client object from the Session after save it
@@ -113,6 +145,7 @@ public class ClientControllerImpl implements IClientController {
   public String delete(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
     // Client exists
     if(id > 0) {
+      // Fetching the client
       Optional<Client> client = this.clientService.findOne(id);
       if(!client.isPresent()) {
         // Flash attribute
@@ -129,5 +162,31 @@ public class ClientControllerImpl implements IClientController {
     }
     return "redirect:/" + Constants.VIEW_LIST;
   }
+
+  @GetMapping(value="/details/{id}")
+  @Override
+  public String details(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
+    Optional<Client> client = null;
+    // Client exists
+    if(id > 0) {
+      // Fetching the client
+      client = this.clientService.findOne(id);
+      if(!client.isPresent()) {
+        // Flash attribute
+        flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_ERROR_KEY, "The client ID does not exist in the database !!!");
+        return "redirect:/" + Constants.VIEW_LIST;
+      }
+    }
+    else {
+      // Flash attribute
+      flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_ERROR_KEY, "The client ID must not be 0 !!!");
+      return "redirect:/" + Constants.VIEW_LIST;
+    }
+    model.put(Constants.ATTRIBUTE_TITLE_KEY, Constants.ATTRIBUTE_TITLE_VALUE_CLIENT_DETAILS + client.get().getName());
+    model.put(Constants.ATTRIBUTE_CLIENT_KEY, client.get());
+    return Constants.VIEW_DETAILS;
+  }
+  
+  
 
 }
