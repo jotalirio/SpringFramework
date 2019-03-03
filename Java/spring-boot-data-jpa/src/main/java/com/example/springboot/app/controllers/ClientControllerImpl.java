@@ -6,9 +6,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,9 +40,17 @@ import com.example.springboot.app.utils.paginator.PageRender;
 @SessionAttributes(Constants.ATTRIBUTE_CLIENT_KEY) 
 public class ClientControllerImpl implements IClientController {
 
-  private static final String UPLOADS_DIRECTORY_FULL_PATH = Constants.STATIC_RESOURCES_DIRECTORY_PATH + Constants.UPLOADS_DIRECTORY + Constants.UPLOADS_IMAGES_DIRECTORY;
-  private static final String EXTERNAL_UPLOADS_DIRECTORY_FULL_PATH = Constants.EXTERNAL_DIRECTORY_PATH + Constants.EXTERNAL_UPLOADS_DIRECTORY + Constants.EXTERNAL_UPLOADS_IMAGES_DIRECTORY;
+  // We are going to use a directory (uploads/images) located inside the static directory
+  // private static final String UPLOADS_DIRECTORY_FULL_PATH = Constants.STATIC_RESOURCES_DIRECTORY_PATH + "/" + Constants.UPLOADS_DIRECTORY + "/" + Constants.UPLOADS_IMAGES_DIRECTORY;
+  
+  // We are going to use an external directory to store the Client´s profile photo
+  // private static final String EXTERNAL_UPLOADS_DIRECTORY_FULL_PATH = Constants.EXTERNAL_DIRECTORY_PATH + Constants.EXTERNAL_UPLOADS_DIRECTORY + Constants.EXTERNAL_UPLOADS_IMAGES_DIRECTORY;
 
+  // We are going to use a directory (uploads/images) located inside the root project
+  private static final String UPLOADS_IMAGES_DIRECTORY_PROJECT_PATH = Constants.UPLOADS_DIRECTORY + "/" + Constants.UPLOADS_IMAGES_DIRECTORY;
+  
+  private final Logger LOGGER = LoggerFactory.getLogger(ClientControllerImpl.class);
+  
   @Autowired
   IClientService clientService;
   
@@ -86,21 +97,35 @@ public class ClientControllerImpl implements IClientController {
     // Checking the photo field
     if(!photo.isEmpty()) {
       
+      // We are going to use a directory (uploads/images) located inside the static directory
       // Path resourcesDirectory = Paths.get(UPLOADS_DIRECTORY_FULL_PATH);
       // String rootPath = resourcesDirectory.toFile().getAbsolutePath();
       
-      // Now we are going to use an external directory to store the Client´s profile photo
-      String rootPath = EXTERNAL_UPLOADS_DIRECTORY_FULL_PATH;
+      // We are going to use an external directory to store the Client´s profile photo
+      // String rootPath = EXTERNAL_UPLOADS_DIRECTORY_FULL_PATH;
       
+      // We are going to use a directory (uploads/images) located inside the root project
+      String uniqueFilename = UUID.randomUUID().toString() + "_" + photo.getOriginalFilename(); 
+      // Path relative to the project: spring-boot-data-jpa/uploads/images
+      Path rootPath = Paths.get(UPLOADS_IMAGES_DIRECTORY_PROJECT_PATH).resolve(uniqueFilename);
+      LOGGER.info("rootPath: " + rootPath);
+      // The absolute path to the images directory: C:/.../.../spring-boot-data-jpa/uploads/images
+      Path rootAbsolutePath = rootPath.toAbsolutePath();
+      LOGGER.info("rootAbsolutePath: " + rootAbsolutePath);
+          
       try {
         
-        byte[] bytes = photo.getBytes();
-        Path pathToPhoto = Paths.get(rootPath + "//" + photo.getOriginalFilename());
-        Files.write(pathToPhoto, bytes);
+        // byte[] bytes = photo.getBytes();
+        // Path pathToPhoto = Paths.get(rootPath + "//" + photo.getOriginalFilename());
+        // Files.write(pathToPhoto, bytes);
+        
+        // Files.copy is equivalent to the 3 lines before
+        Files.copy(photo.getInputStream(), rootAbsolutePath);
+        
         // Flash message
-        flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_INFO_KEY, "The photo was uploaded successfully '" + photo.getOriginalFilename() + "'");
+        flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_INFO_KEY, "The photo was uploaded successfully '" + uniqueFilename + "'");
         // Setting the photo in Client object
-        client.setPhoto(photo.getOriginalFilename());
+        client.setPhoto(uniqueFilename);
         
       } catch (IOException e) {
         // TODO Auto-generated catch block
