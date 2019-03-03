@@ -37,7 +37,7 @@ import com.example.springboot.app.utils.paginator.PageRender;
 @SessionAttributes(Constants.ATTRIBUTE_CLIENT_KEY) 
 public class ClientControllerImpl implements IClientController {
 
-  private static final String UPLOADS_DIRECTORY_FULL_PATH = Constants.STATIC_RESOURCES_DIRECTORY_PATH + Constants.UPLOADS_DIRECTORY;
+  private static final String UPLOADS_DIRECTORY_FULL_PATH = Constants.STATIC_RESOURCES_DIRECTORY_PATH + Constants.UPLOADS_DIRECTORY + Constants.UPLOADS_IMAGES_DIRECTORY;
   
   @Autowired
   IClientService clientService;
@@ -84,8 +84,10 @@ public class ClientControllerImpl implements IClientController {
     
     // Checking the photo field
     if(!photo.isEmpty()) {
+      
       Path resourcesDirectory = Paths.get(UPLOADS_DIRECTORY_FULL_PATH);
       String rootPath = resourcesDirectory.toFile().getAbsolutePath();
+      
       try {
         
         byte[] bytes = photo.getBytes();
