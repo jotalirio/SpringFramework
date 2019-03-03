@@ -38,7 +38,8 @@ import com.example.springboot.app.utils.paginator.PageRender;
 public class ClientControllerImpl implements IClientController {
 
   private static final String UPLOADS_DIRECTORY_FULL_PATH = Constants.STATIC_RESOURCES_DIRECTORY_PATH + Constants.UPLOADS_DIRECTORY + Constants.UPLOADS_IMAGES_DIRECTORY;
-  
+  private static final String EXTERNAL_UPLOADS_DIRECTORY_FULL_PATH = Constants.EXTERNAL_DIRECTORY_PATH + Constants.EXTERNAL_UPLOADS_DIRECTORY + Constants.EXTERNAL_UPLOADS_IMAGES_DIRECTORY;
+
   @Autowired
   IClientService clientService;
   
@@ -85,8 +86,11 @@ public class ClientControllerImpl implements IClientController {
     // Checking the photo field
     if(!photo.isEmpty()) {
       
-      Path resourcesDirectory = Paths.get(UPLOADS_DIRECTORY_FULL_PATH);
-      String rootPath = resourcesDirectory.toFile().getAbsolutePath();
+      // Path resourcesDirectory = Paths.get(UPLOADS_DIRECTORY_FULL_PATH);
+      // String rootPath = resourcesDirectory.toFile().getAbsolutePath();
+      
+      // Now we are going to use an external directory to store the Client´s profile photo
+      String rootPath = EXTERNAL_UPLOADS_DIRECTORY_FULL_PATH;
       
       try {
         
