@@ -1,6 +1,8 @@
 package com.example.springboot.app.controllers;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -13,9 +15,14 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -216,6 +223,39 @@ public class ClientControllerImpl implements IClientController {
     return Constants.VIEW_DETAILS;
   }
   
-  
+  // Using .+ Spring avoid to split the filename deleting the image extension
+  @GetMapping(value = "/uploads/images/{filename:.+}")
+  public ResponseEntity<Resource> getPhoto(@PathVariable(value = "filename") String fileName) {
+    Path pathPhoto = Paths.get(UPLOADS_IMAGES_DIRECTORY_PROJECT_PATH).resolve(fileName).toAbsolutePath();
+    LOGGER.info("photoPath: " + pathPhoto);
+    Resource resource = null;
+    try {
+      
+      resource = new UrlResource(pathPhoto.toUri());
+      if(!resource.exists() || !resource.isReadable()) {
+        LOGGER.error("ERROR: There was a problem fetching the client´s photo. The image '" + pathPhoto.toString() + "' does not exist.");
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .body(this.getImageNotFound());
+      }
+    } 
+    catch (MalformedURLException ex) {
+      LOGGER.error(ex.getMessage(), ex);
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+             .body(this.getImageNotFound());
+    }
+    return ResponseEntity.ok()
+           .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" +  resource.getFilename() + "\"")
+           .body(resource);
+  }
 
+  private Resource getImageNotFound() {
+    Path pathImageNotFound = Paths.get(UPLOADS_IMAGES_DIRECTORY_PROJECT_PATH).resolve(Constants.FILENAME_IMAGE_NOT_FOUND).toAbsolutePath();
+    Resource resource = null;
+    try {
+      resource = new UrlResource(pathImageNotFound.toUri());
+    } catch (MalformedURLException ex) {
+      LOGGER.error(ex.getMessage(), ex);
+    }
+    return resource;
+  }
 }

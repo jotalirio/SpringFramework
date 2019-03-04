@@ -30,6 +30,7 @@ public interface Constants {
   public static final String EXTERNAL_DIRECTORY_PATH = "C://MY-PROJECTS//SpringFramework//Java";
   public static final String EXTERNAL_UPLOADS_DIRECTORY = "//uploads";
   public static final String EXTERNAL_UPLOADS_IMAGES_DIRECTORY = "//images";
+  public static final String FILENAME_IMAGE_NOT_FOUND = "image-not-found.png";
 
 
   

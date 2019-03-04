@@ -1,24 +1,19 @@
 package com.example.springboot.app.conf;
 
-import java.nio.file.Paths;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import com.example.springboot.app.utils.Constants;
 
 @Configuration
 public class MvcConfig implements WebMvcConfigurer {
+
+  /* We comment the code because now we are going to return the client's photo in a HTTP Response using a service in ClientControllerImpl
 
   // We are going to use a directory (uploads/images) located inside the root project
   private static final String UPLOADS_IMAGES_DIRECTORY_PROJECT_PATH = Constants.UPLOADS_DIRECTORY + "/" + Constants.UPLOADS_IMAGES_DIRECTORY;
   private static final String RESOURCE_HANDLER = "/" + Constants.UPLOADS_DIRECTORY + "/" + Constants.UPLOADS_IMAGES_DIRECTORY + "/" + Constants.ANY_FILE;
 
   private final Logger LOGGER = LoggerFactory.getLogger(MvcConfig.class);
-  
+
   @Override
   public void addResourceHandlers(ResourceHandlerRegistry registry) {
     // TODO Auto-generated method stub
@@ -34,5 +29,6 @@ public class MvcConfig implements WebMvcConfigurer {
     registry.addResourceHandler(RESOURCE_HANDLER).addResourceLocations(resourcePath);
   }
 
+  */
 
 }
