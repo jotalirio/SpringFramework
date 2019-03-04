@@ -1,5 +1,6 @@
 package com.example.springboot.app.controllers;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -104,6 +105,18 @@ public class ClientControllerImpl implements IClientController {
     // Checking the photo field
     if(!photo.isEmpty()) {
       
+      // Deleting the previous Client´s photo
+      if(client.getId() != null && client.getId() > 0 
+          && client.getPhoto() != null && !client.getPhoto().isEmpty()) {
+        
+        // Deleting the previous Client´s photo
+        Path pathPreviousPhoto = Paths.get(UPLOADS_IMAGES_DIRECTORY_PROJECT_PATH).resolve(client.getPhoto()).toAbsolutePath();
+        File previousPhoto = pathPreviousPhoto.toFile();
+        if(previousPhoto.exists() && previousPhoto.canRead()) {
+          previousPhoto.delete();
+        }
+      }
+      
       // We are going to use a directory (uploads/images) located inside the static directory
       // Path resourcesDirectory = Paths.get(UPLOADS_DIRECTORY_FULL_PATH);
       // String rootPath = resourcesDirectory.toFile().getAbsolutePath();
@@ -191,6 +204,15 @@ public class ClientControllerImpl implements IClientController {
       this.clientService.delete(id);
       // Flash attribute
       flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_SUCCESS_KEY, "The client was removed successfully !!!");
+      // Deleting the Client´s photo
+      Path pathPhoto = Paths.get(UPLOADS_IMAGES_DIRECTORY_PROJECT_PATH).resolve(client.get().getPhoto()).toAbsolutePath();
+      File photo = pathPhoto.toFile();
+      if(photo.exists() && photo.canRead()) {
+        if(photo.delete()) {
+          // Flash attribute
+          flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_INFO_KEY, "The client´s photo '" + client.get().getPhoto() + "' was deleted successfully !!!");
+        }
+      }
     }
     else {
       // Flash attribute
