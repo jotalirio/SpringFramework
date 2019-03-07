@@ -26,6 +26,7 @@ public interface Constants {
   public static final String ATTRIBUTE_PAGE_RENDER_KEY = "page";
   public static final String STATIC_RESOURCES_DIRECTORY_PATH = "src//main//resources//static";
   public static final String UPLOADS_DIRECTORY = "uploads";
+  public static final String DEFAULT_DIRECTORY = "default";
   public static final String UPLOADS_IMAGES_DIRECTORY = "images";
   public static final String EXTERNAL_DIRECTORY_PATH = "C://MY-PROJECTS//SpringFramework//Java";
   public static final String EXTERNAL_UPLOADS_DIRECTORY = "//uploads";

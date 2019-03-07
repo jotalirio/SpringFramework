@@ -56,7 +56,8 @@ public class ClientControllerImpl implements IClientController {
 
   // We are going to use a directory (uploads/images) located inside the root project
   private static final String UPLOADS_IMAGES_DIRECTORY_PROJECT_PATH = Constants.UPLOADS_DIRECTORY + "/" + Constants.UPLOADS_IMAGES_DIRECTORY;
-  
+  private static final String DEFAULT_IMAGES_DIRECTORY_PROJECT_PATH = Constants.DEFAULT_DIRECTORY + "/" + Constants.UPLOADS_IMAGES_DIRECTORY;
+
   private final Logger LOGGER = LoggerFactory.getLogger(ClientControllerImpl.class);
   
   @Autowired
@@ -271,7 +272,7 @@ public class ClientControllerImpl implements IClientController {
   }
 
   private Resource getImageNotFound() {
-    Path pathImageNotFound = Paths.get(UPLOADS_IMAGES_DIRECTORY_PROJECT_PATH).resolve(Constants.FILENAME_IMAGE_NOT_FOUND).toAbsolutePath();
+    Path pathImageNotFound = Paths.get(DEFAULT_IMAGES_DIRECTORY_PROJECT_PATH).resolve(Constants.FILENAME_IMAGE_NOT_FOUND).toAbsolutePath();
     Resource resource = null;
     try {
       resource = new UrlResource(pathImageNotFound.toUri());
