@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.example.springboot.app.models.entity.Client;
 
-public interface IClientService {
+public interface ClientService {
   
   // abstract methods
   public List<Client> getClients();

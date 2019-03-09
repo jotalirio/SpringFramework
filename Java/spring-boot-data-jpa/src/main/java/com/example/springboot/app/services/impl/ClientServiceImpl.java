@@ -1,4 +1,4 @@
-package com.example.springboot.app.services;
+package com.example.springboot.app.services.impl;
 
 import java.util.List;
 import java.util.Optional;
@@ -9,11 +9,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.springboot.app.dao.IClientDaoPagingAndSortingRepository;
+import com.example.springboot.app.dao.ClientDaoPagingAndSortingRepository;
 import com.example.springboot.app.models.entity.Client;
+import com.example.springboot.app.services.ClientService;
 
 @Service
-public class ClientServiceImpl implements IClientService {
+public class ClientServiceImpl implements ClientService {
 
 //  @Autowired
 //  private IClientDao clientDao;
@@ -22,7 +23,7 @@ public class ClientServiceImpl implements IClientService {
 //  IClientDaoCrudRepository clientDao;
 
   @Autowired
-  IClientDaoPagingAndSortingRepository clientDao;
+  ClientDaoPagingAndSortingRepository clientDao;
   
   @Transactional(readOnly = true)
   @Override

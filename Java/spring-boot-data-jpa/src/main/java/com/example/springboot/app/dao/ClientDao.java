@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.example.springboot.app.models.entity.Client;
 
-public interface IClientDao {
+public interface ClientDao {
 
   // abstract methods
   public List<Client> findAll();

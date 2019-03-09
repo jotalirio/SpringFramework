@@ -1,4 +1,4 @@
-package com.example.springboot.app.controllers;
+package com.example.springboot.app.controllers.impl;
 
 import java.util.Map;
 import java.util.Optional;
@@ -28,9 +28,10 @@ import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.example.springboot.app.controllers.ClientController;
 import com.example.springboot.app.models.entity.Client;
-import com.example.springboot.app.services.IClientService;
-import com.example.springboot.app.services.IUploadFileService;
+import com.example.springboot.app.services.ClientService;
+import com.example.springboot.app.services.UploadFileService;
 import com.example.springboot.app.utils.Constants;
 import com.example.springboot.app.utils.paginator.PageRender;
 
@@ -38,15 +39,15 @@ import com.example.springboot.app.utils.paginator.PageRender;
 // We are storing in the Session the client entity when we create new Client or update an existing one
 // In this way, we remove the input type = hidden with the Client´s id from the Form in the create.html file
 @SessionAttributes(Constants.ATTRIBUTE_CLIENT_KEY) 
-public class ClientControllerImpl implements IClientController {
+public class ClientControllerImpl implements ClientController {
 
   private final Logger LOGGER = LoggerFactory.getLogger(ClientControllerImpl.class);
   
   @Autowired
-  IClientService clientService;
+  ClientService clientService;
   
   @Autowired
-  IUploadFileService uploadFileService;
+  UploadFileService uploadFileService;
   
     // Use this method with IClientDao or IClientDaoCrudRepository
 //  @RequestMapping(value = "/list", method = RequestMethod.GET)
