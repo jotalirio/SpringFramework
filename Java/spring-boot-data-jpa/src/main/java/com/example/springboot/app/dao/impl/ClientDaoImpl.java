@@ -1,4 +1,4 @@
-package com.example.springboot.app.dao;
+package com.example.springboot.app.dao.impl;
 
 import java.util.List;
 
@@ -7,11 +7,12 @@ import javax.persistence.PersistenceContext;
 
 import org.springframework.stereotype.Repository;
 
+import com.example.springboot.app.dao.ClientDao;
 import com.example.springboot.app.models.entity.Client;
 import com.example.springboot.app.utils.Constants;
 
 @Repository
-public class ClientDaoImpl implements IClientDao {
+public class ClientDaoImpl implements ClientDao {
 
   private static final String FROM_CLIENT = Constants.FROM + Constants.BLANK + Constants.ENTITY_CLIENT;
   

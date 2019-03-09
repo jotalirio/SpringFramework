@@ -10,7 +10,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.springboot.app.models.entity.Client;
 
-public interface IClientController {
+public interface ClientController {
 
   // abstracts methods
   // Use this method with IClientDao or IClientDaoCrudRepository

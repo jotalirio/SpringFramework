@@ -1,4 +1,4 @@
-package com.example.springboot.app.services;
+package com.example.springboot.app.services.impl;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,10 +16,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.springboot.app.services.UploadFileService;
 import com.example.springboot.app.utils.Constants;
 
 @Service
-public class UploadFileServiceImpl implements IUploadFileService {
+public class UploadFileServiceImpl implements UploadFileService {
 
   // We are going to use a directory (uploads/images) located inside the static directory
   // private static final String UPLOADS_DIRECTORY_FULL_PATH = Constants.STATIC_RESOURCES_DIRECTORY_PATH + "/" + Constants.UPLOADS_DIRECTORY + "/" + Constants.UPLOADS_IMAGES_DIRECTORY;
