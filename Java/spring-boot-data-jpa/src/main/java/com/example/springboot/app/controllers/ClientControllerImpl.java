@@ -1,15 +1,7 @@
 package com.example.springboot.app.controllers;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
 import javax.validation.Valid;
 
@@ -17,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -39,6 +30,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.example.springboot.app.models.entity.Client;
 import com.example.springboot.app.services.IClientService;
+import com.example.springboot.app.services.IUploadFileService;
 import com.example.springboot.app.utils.Constants;
 import com.example.springboot.app.utils.paginator.PageRender;
 
@@ -48,21 +40,15 @@ import com.example.springboot.app.utils.paginator.PageRender;
 @SessionAttributes(Constants.ATTRIBUTE_CLIENT_KEY) 
 public class ClientControllerImpl implements IClientController {
 
-  // We are going to use a directory (uploads/images) located inside the static directory
-  // private static final String UPLOADS_DIRECTORY_FULL_PATH = Constants.STATIC_RESOURCES_DIRECTORY_PATH + "/" + Constants.UPLOADS_DIRECTORY + "/" + Constants.UPLOADS_IMAGES_DIRECTORY;
-  
-  // We are going to use an external directory to store the Client´s profile photo
-  // private static final String EXTERNAL_UPLOADS_DIRECTORY_FULL_PATH = Constants.EXTERNAL_DIRECTORY_PATH + Constants.EXTERNAL_UPLOADS_DIRECTORY + Constants.EXTERNAL_UPLOADS_IMAGES_DIRECTORY;
-
-  // We are going to use a directory (uploads/images) located inside the root project
-  private static final String UPLOADS_IMAGES_DIRECTORY_PROJECT_PATH = Constants.UPLOADS_DIRECTORY + "/" + Constants.UPLOADS_IMAGES_DIRECTORY;
-  private static final String DEFAULT_IMAGES_DIRECTORY_PROJECT_PATH = Constants.DEFAULT_DIRECTORY + "/" + Constants.UPLOADS_IMAGES_DIRECTORY;
-
   private final Logger LOGGER = LoggerFactory.getLogger(ClientControllerImpl.class);
   
   @Autowired
   IClientService clientService;
   
+  @Autowired
+  IUploadFileService uploadFileService;
+  
+    // Use this method with IClientDao or IClientDaoCrudRepository
 //  @RequestMapping(value = "/list", method = RequestMethod.GET)
 //  @Override
 //  public String listClients(Model model) {
@@ -102,59 +88,30 @@ public class ClientControllerImpl implements IClientController {
     if(result.hasErrors()) {
       return Constants.VIEW_CREATE;
     }
-    
     // Checking the photo field
     if(!photo.isEmpty()) {
-      
       // Deleting the previous Client´s photo
       if(client.getId() != null && client.getId() > 0 
           && client.getPhoto() != null && !client.getPhoto().isEmpty()) {
         
         // Deleting the previous Client´s photo
-        Path pathPreviousPhoto = Paths.get(UPLOADS_IMAGES_DIRECTORY_PROJECT_PATH).resolve(client.getPhoto()).toAbsolutePath();
-        File previousPhoto = pathPreviousPhoto.toFile();
-        if(previousPhoto.exists() && previousPhoto.canRead()) {
-          previousPhoto.delete();
+        if(!this.uploadFileService.deleteImage(client.getPhoto())) {
+          LOGGER.warn("There was a problem deleting the previous client´s photo '" + client.getPhoto() + "'.");
         }
       }
-      
-      // We are going to use a directory (uploads/images) located inside the static directory
-      // Path resourcesDirectory = Paths.get(UPLOADS_DIRECTORY_FULL_PATH);
-      // String rootPath = resourcesDirectory.toFile().getAbsolutePath();
-      
-      // We are going to use an external directory to store the Client´s profile photo
-      // String rootPath = EXTERNAL_UPLOADS_DIRECTORY_FULL_PATH;
-      
-      // We are going to use a directory (uploads/images) located inside the root project
-      String uniqueFilename = UUID.randomUUID().toString() + "_" + photo.getOriginalFilename(); 
-      // Path relative to the project: spring-boot-data-jpa/uploads/images
-      Path rootPath = Paths.get(UPLOADS_IMAGES_DIRECTORY_PROJECT_PATH).resolve(uniqueFilename);
-      LOGGER.info("rootPath: " + rootPath);
-      // The absolute path to the images directory: C:/.../.../spring-boot-data-jpa/uploads/images
-      Path rootAbsolutePath = rootPath.toAbsolutePath();
-      LOGGER.info("rootAbsolutePath: " + rootAbsolutePath);
-          
-      try {
-        
-        // byte[] bytes = photo.getBytes();
-        // Path pathToPhoto = Paths.get(rootPath + "//" + photo.getOriginalFilename());
-        // Files.write(pathToPhoto, bytes);
-        
-        // Files.copy is equivalent to the 3 lines before
-        Files.copy(photo.getInputStream(), rootAbsolutePath);
-        
+      // Saving the  new client´s photo
+      String uniqueFilename = this.uploadFileService.createImage(photo);
+      if(uniqueFilename != null) {
         // Flash message
-        flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_INFO_KEY, "The photo was uploaded successfully '" + uniqueFilename + "'");
+        flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_INFO_KEY, "The photo was uploaded successfully '" + photo.getOriginalFilename() + "'");
         // Setting the photo in Client object
         client.setPhoto(uniqueFilename);
-        
-      } catch (IOException e) {
-        // TODO Auto-generated catch block
-        e.printStackTrace();
       }
-      
+      else {
+        // Flash message
+        flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_ERROR_KEY, "There was a problem saving the photo '" + photo.getOriginalFilename() + "', please edit the profile and try again.");       
+      }              
     }
-    
     // Flash attribute
     String flashMessage = (client.getId() != null && client.getId() > 0) ? "The client was updated successfully !!!" : "The new client was created successfully !!!"; 
     this.clientService.save(client);
@@ -206,13 +163,12 @@ public class ClientControllerImpl implements IClientController {
       // Flash attribute
       flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_SUCCESS_KEY, "The client was removed successfully !!!");
       // Deleting the Client´s photo
-      Path pathPhoto = Paths.get(UPLOADS_IMAGES_DIRECTORY_PROJECT_PATH).resolve(client.get().getPhoto()).toAbsolutePath();
-      File photo = pathPhoto.toFile();
-      if(photo.exists() && photo.canRead()) {
-        if(photo.delete()) {
-          // Flash attribute
-          flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_INFO_KEY, "The client´s photo '" + client.get().getPhoto() + "' was deleted successfully !!!");
-        }
+      if(this.uploadFileService.deleteImage(client.get().getPhoto())) {
+        // Flash attribute
+        flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_INFO_KEY, "The client´s photo '" + client.get().getPhoto() + "' was deleted successfully !!!");
+      }
+      else {
+        LOGGER.warn("There was a problem deleting the client´s photo '" + client.get().getPhoto() + "'.");
       }
     }
     else {
@@ -249,36 +205,17 @@ public class ClientControllerImpl implements IClientController {
   // Using .+ Spring avoid to split the filename deleting the image extension
   @GetMapping(value = "/uploads/images/{filename:.+}")
   public ResponseEntity<Resource> getPhoto(@PathVariable(value = "filename") String fileName) {
-    Path pathPhoto = Paths.get(UPLOADS_IMAGES_DIRECTORY_PROJECT_PATH).resolve(fileName).toAbsolutePath();
-    LOGGER.info("photoPath: " + pathPhoto);
-    Resource resource = null;
-    try {
-      
-      resource = new UrlResource(pathPhoto.toUri());
-      if(!resource.exists() || !resource.isReadable()) {
-        LOGGER.error("ERROR: There was a problem fetching the client´s photo. The image '" + pathPhoto.toString() + "' does not exist.");
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .body(this.getImageNotFound());
-      }
-    } 
-    catch (MalformedURLException ex) {
-      LOGGER.error(ex.getMessage(), ex);
-      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-             .body(this.getImageNotFound());
+    Resource resource = this.uploadFileService.loadImage(fileName);
+    ResponseEntity<Resource> responseEntity = null;
+    if(resource != null && resource.exists() && resource.isReadable()) {
+      responseEntity = ResponseEntity.ok()
+                       .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" +  resource.getFilename() + "\"")
+                       .body(resource);
     }
-    return ResponseEntity.ok()
-           .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" +  resource.getFilename() + "\"")
-           .body(resource);
-  }
-
-  private Resource getImageNotFound() {
-    Path pathImageNotFound = Paths.get(DEFAULT_IMAGES_DIRECTORY_PROJECT_PATH).resolve(Constants.FILENAME_IMAGE_NOT_FOUND).toAbsolutePath();
-    Resource resource = null;
-    try {
-      resource = new UrlResource(pathImageNotFound.toUri());
-    } catch (MalformedURLException ex) {
-      LOGGER.error(ex.getMessage(), ex);
+    else {
+      responseEntity = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(this.uploadFileService.getImageNotFound());
     }
-    return resource;
+    return responseEntity;
   }
+  
 }
