@@ -24,3 +24,21 @@ INSERT INTO Clients (name, surname, email, creation_date, photo) VALUES ('John',
 INSERT INTO Clients (name, surname, email, creation_date, photo) VALUES ('Joe', 'Bloggs', 'joe.bloggs@gmail.com', '2017-08-23', '');
 INSERT INTO Clients (name, surname, email, creation_date, photo) VALUES ('John', 'Stiles', 'john.stiles@gmail.com', '2017-08-24', '');
 INSERT INTO Clients (name, surname, email, creation_date, photo) VALUES ('Richard', 'Roe', 'stiles.roe@gmail.com', '2017-08-25', '');
+
+/* Populate products table */
+INSERT INTO products (name, price, creation_date) VALUES ('Panasonic LCD Screen', 259990, NOW());
+INSERT INTO products (name, price, creation_date) VALUES ('Sony Digital Camera DSC-W320B', 123490, NOW());
+INSERT INTO products (name, price, creation_date) VALUES ('Apple iPod Shuffle', 1499990, NOW());
+INSERT INTO products (name, price, creation_date) VALUES ('Sony Notebook Z110', 37990, NOW());
+INSERT INTO products (name, price, creation_date) VALUES ('Hewlett Packard Multifunctional F2280', 69990, NOW());
+INSERT INTO products (name, price, creation_date) VALUES ('Bianchi Bike Aro 26', 69990, NOW());
+INSERT INTO products (name, price, creation_date) VALUES ('Mica White Table', 299990, NOW());
+
+/* Mocked invoices */
+INSERT INTO invoices (description, observations, client_id, creation_date) VALUES ('Invoice Office Laptops', 'None observations', 1, NOW());
+INSERT INTO invoices_lines (quantity, invoice_id, product_id) VALUES (1, 1, 1);
+INSERT INTO invoices_lines (quantity, invoice_id, product_id) VALUES (2, 1, 4);
+INSERT INTO invoices_lines (quantity, invoice_id, product_id) VALUES (1, 1, 5);
+INSERT INTO invoices_lines (quantity, invoice_id, product_id) VALUES (1, 1, 7);
+INSERT INTO invoices (description, observations, client_id, creation_date) VALUES ('Invoice Bike', 'The colour is dark red', 1, NOW());
+INSERT INTO invoices_lines (quantity, invoice_id, product_id) VALUES (3, 2, 6);

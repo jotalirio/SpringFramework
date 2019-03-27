@@ -42,7 +42,9 @@ public class Invoice implements Serializable {
   
   // An invoice is related to only one Client but a Client may to have many invoices so many invoices linked to one Client
   // Automatically the foreign key 'client_id' is created on 'invoices' table
+  // but optionally we can use the @JoinColumn annotation to specify explicit the foreign key 'client_id' on 'invoices' table
   @ManyToOne(fetch = FetchType.LAZY)
+//  @JoinColumn(name = "client_id")
   private Client client;
 
   // A Invoice may have many invoices lines
@@ -114,7 +116,7 @@ public class Invoice implements Serializable {
     this.invoiceLines.add(invoiceLine);
   }
   
-  public Double calculateTotalAmount() {
+  public Double getTotal() {
     
     Double totalAmount = 0.0;
     for (InvoiceLine invoiceLine : this.invoiceLines) {
