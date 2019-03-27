@@ -52,7 +52,8 @@ public class Client implements Serializable {
 
   // A Client may have many invoices
   // 'mappedBy' indicates the attribute 'client' in Invoice class. 
-  // Using 'mappedBy' we have a two ways directions map between the Client and Invoice classes through the 'invoices' and 'client' attributes
+  // Using 'mappedBy' we have a bidirectional mapping between the Client and Invoice classes through the 'invoices' and 'client' attributes
+  // so we can fetch the invoices linked to a Client and the Client from a Invoice as well 
   // Automatically the foreign key 'client_id' pointing to 'clients' table is created inside of 'invoices' table
   @OneToMany(mappedBy = "client", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   List<Invoice> invoices;
@@ -120,6 +121,7 @@ public class Client implements Serializable {
     this.invoices = invoices;
   }
 
+  
   /* Methods */
 
   public void addInvoice(Invoice invoice) {
