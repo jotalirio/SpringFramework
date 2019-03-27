@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+	<script type="text/javascript" th:fragment="autocomplete-javascript">
+	
+		$(document).ready(function(){
+			$("#search_product").autocomplete({
+				source: function(request, response) {
+					$.ajax({
+						url: "/invoice/load-products/" + request.term, // 'term' -> Represents the value entered by the user into the input of type text
+						dataType: "json",
+						data: { // We can pass the 'term' inside the 'dta:' field as a JSON object with the following structure:
+								// In this case the method type would be GET
+							term: request.term
+						},
+						success: function(data) { // This is the data (array) received from the REST service
+							response($.map(data, function(item) { // For each item in data returns a JSON object with the following structure:
+								return {
+									value: item.id,
+									label: item.name,
+									price: item.price
+								};
+							}));
+						}
+					});
+				},
+				select: function(event, ui) { // Doing some stuff when a product from the autocomplete list is selected. 
+											  // In our case when a product is selected we will put the product's name 
+											  // into the input type text and will create an invoice line
+					
+					$("#search_product").val(ui.item.label);
+					return false;
+				}
+			});
+		});
+	
+	</script>
+</body>
+</html>
