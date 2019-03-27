@@ -23,7 +23,7 @@ public class ClientServiceImpl implements ClientService {
 //  IClientDaoCrudRepository clientDao;
 
   @Autowired
-  ClientDaoPagingAndSortingRepository clientDao;
+  private ClientDaoPagingAndSortingRepository clientDao;
   
   @Transactional(readOnly = true)
   @Override
@@ -54,6 +54,5 @@ public class ClientServiceImpl implements ClientService {
   public void delete(Long id) {
     this.clientDao.deleteById(id);
   }
-
 
 }

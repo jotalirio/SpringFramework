@@ -7,7 +7,7 @@
 			$("#search_product").autocomplete({
 				source: function(request, response) {
 					$.ajax({
-						url: "/invoice/load-products/" + request.term, // 'term' -> Represents the value entered by the user into the input of type text
+						url: "/products/load/" + request.term, // 'term' -> Represents the value entered by the user into the input of type text
 						dataType: "json",
 						data: { // We can pass the 'term' inside the 'dta:' field as a JSON object with the following structure:
 								// In this case the method type would be GET
