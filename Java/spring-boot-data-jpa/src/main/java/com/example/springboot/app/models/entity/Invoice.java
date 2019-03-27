@@ -21,8 +21,6 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 @Entity
 @Table(name = "invoices")
 public class Invoice implements Serializable {
@@ -39,10 +37,11 @@ public class Invoice implements Serializable {
   @NotNull
   @Temporal(TemporalType.DATE)
   @Column(name = "creation_date")
-  @DateTimeFormat(pattern = "dd-MM-yyyy")
+//  @DateTimeFormat(pattern = "dd-MM-yyyy")
   private Date creationDate;
   
   // An invoice is related to only one Client but a Client may to have many invoices so many invoices linked to one Client
+  // Automatically the foreign key 'client_id' is created on 'invoices' table
   @ManyToOne(fetch = FetchType.LAZY)
   private Client client;
 
@@ -56,17 +55,17 @@ public class Invoice implements Serializable {
   @JoinColumn(name = "invoice_id")
   private List<InvoiceLine> invoiceLines;
   
-  // This method is creating the invoice Date automatically before to persist the invoice inside of the database
-  @PrePersist
-  public void prePersist() {
-    this.creationDate = new Date();
-  }
-  
   
   public Invoice() {
     this.invoiceLines = new ArrayList<InvoiceLine>();
   }
 
+  
+  // This method is creating the invoice's creation Date automatically before to persist the invoice in question inside of the database
+  @PrePersist
+  public void prePersist() {
+    this.creationDate = new Date();
+  }
   
   public Long getId() {
     return id;
@@ -110,7 +109,20 @@ public class Invoice implements Serializable {
 
   
   /* Methods */
+  
   public void addInvoiceLine(InvoiceLine invoiceLine) {
     this.invoiceLines.add(invoiceLine);
+  }
+  
+  public Double calculateTotalAmount() {
+    
+    Double totalAmount = 0.0;
+    for (InvoiceLine invoiceLine : this.invoiceLines) {
+      totalAmount += invoiceLine.calculateAmount();
+    }
+    return totalAmount;
+    
+    // Using streams
+//    return this.invoiceLines.stream().mapToDouble( it -> it.calculateAmount()).reduce(0.0, Double::sum);
   }
 }
