@@ -198,7 +198,7 @@ public class ClientControllerImpl implements ClientController {
       flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_ERROR_KEY, "The client ID must not be 0 !!!");
       return "redirect:/" + Constants.VIEW_LIST;
     }
-    model.put(Constants.ATTRIBUTE_TITLE_KEY, Constants.ATTRIBUTE_TITLE_VALUE_CLIENT_DETAILS + client.get().getName());
+    model.put(Constants.ATTRIBUTE_TITLE_KEY, Constants.ATTRIBUTE_TITLE_VALUE_CLIENT_DETAILS + client.get().getName() + " " + client.get().getSurname());
     model.put(Constants.ATTRIBUTE_CLIENT_KEY, client.get());
     return Constants.VIEW_DETAILS;
   }
