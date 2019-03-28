@@ -1,13 +1,16 @@
 package com.example.springboot.app.controllers.impl;
 
-import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
+
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -73,12 +76,25 @@ public class InvoiceControllerImpl implements InvoiceController {
 
   @PostMapping("/create")
   @Override
-  public String save(Invoice invoice, 
+  public String save(@Valid Invoice invoice, 
+                     BindingResult result,
+                     Model model,
                      @RequestParam(name = "invoiceLine_id[]", required = false) Long[] invoiceLinesId, // These Ids are the product's id linked to each invoice's line
                      @RequestParam(name = "quantity[]", required = false) Integer[] quantities,
                      RedirectAttributes flash,
                      SessionStatus sessionStatus) {
     
+    // If the form data has errors, return to the create View showing the form
+    if (result.hasErrors()) {
+      model.addAttribute(Constants.ATTRIBUTE_TITLE_KEY, Constants.ATTRIBUTE_TITLE_VALUE_NEW_INVOICE);
+      return INVOICE_CREATE_VIEW;
+    }
+    // At least we need to have one invoice line
+    if (invoiceLinesId == null || invoiceLinesId.length == 0) {
+      model.addAttribute(Constants.ATTRIBUTE_TITLE_KEY, Constants.ATTRIBUTE_TITLE_VALUE_NEW_INVOICE);
+      model.addAttribute(Constants.ATTRIBUTE_FLASH_ERROR_KEY, "ERROR: The invoice must to have at least one product line.");       
+      return INVOICE_CREATE_VIEW;
+    }
     // For every invoiceLine we need to retrieve its related product using the 'product_id' passed from the HTML 'input' through the 'value' attribute
     for (int i = 0; i < invoiceLinesId.length; i++) {
       // We fetch the product by id

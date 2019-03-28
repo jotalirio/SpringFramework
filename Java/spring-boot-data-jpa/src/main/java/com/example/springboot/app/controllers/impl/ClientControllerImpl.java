@@ -84,9 +84,9 @@ public class ClientControllerImpl implements ClientController {
   @RequestMapping(value = "/create", method = RequestMethod.POST)
   @Override
   public String save(@Valid Client client, BindingResult result, Model model, @RequestParam("file") MultipartFile photo, RedirectAttributes flash, SessionStatus sessionStatus) {
-    model.addAttribute(Constants.ATTRIBUTE_TITLE_KEY, Constants.ATTRIBUTE_TITLE_VALUE_NEW_CLIENT);
     // If the form data has errors, return to the create View showing the form
     if(result.hasErrors()) {
+      model.addAttribute(Constants.ATTRIBUTE_TITLE_KEY, Constants.ATTRIBUTE_TITLE_VALUE_NEW_CLIENT);
       return Constants.VIEW_CREATE;
     }
     // Checking the photo field
@@ -120,7 +120,7 @@ public class ClientControllerImpl implements ClientController {
     sessionStatus.setComplete();
     // Flash attribute
     flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_SUCCESS_KEY, flashMessage);
-    return "redirect:" + Constants.VIEW_LIST;
+    return "redirect:/" + Constants.VIEW_LIST;
   }
 
   @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)

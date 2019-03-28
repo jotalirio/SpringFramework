@@ -12,7 +12,6 @@ import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "products")
@@ -27,7 +26,7 @@ public class Product implements Serializable {
   private String name;
   private Double price;
   
-  @NotNull
+//  @NotNull
   @Temporal(TemporalType.DATE)
   @Column(name = "creation_date")
   private Date creationDate;
