@@ -21,6 +21,12 @@ public class InvoiceServiceImpl implements InvoiceService {
   public void save(Invoice invoice) {
     this.invoiceDao.save(invoice);
   }
+  
+  @Transactional
+  @Override
+  public void delete(Long id) {
+    this.invoiceDao.deleteById(id);
+  }
 
   @Transactional(readOnly = true)
   @Override

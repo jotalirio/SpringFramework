@@ -122,6 +122,21 @@ public class InvoiceControllerImpl implements InvoiceController {
     return "redirect:/details/" + invoice.getClient().getId();
   }
 
+  @GetMapping("/delete/{id}")
+  @Override
+  public String delete(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
+    // Fetching the invoice
+    Optional<Invoice> invoice = this.invoiceService.findById(id);
+    if (invoice.isPresent()) {
+      this.invoiceService.delete(id);
+      flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_SUCCESS_KEY, "The invoice was deleted successfully !!!");
+      return "redirect:/details/" + invoice.get().getClient().getId();
+    }
+    // Error deleting the invoice
+    flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_ERROR_KEY, "ERROR trying to delete invoice. The invoce does not exist in the database !!!");
+    return "redirect:/list";
+  }
+
   @GetMapping("/details/{id}")
   @Override
   public String details(@PathVariable(value = "id") Long id, Model model, RedirectAttributes flash) {

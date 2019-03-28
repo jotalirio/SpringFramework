@@ -20,5 +20,6 @@ public interface InvoiceController {
                      RedirectAttributes flash, 
                      SessionStatus sessionStatus);
   
+  public String delete(Long id, RedirectAttributes flash);
   public String details(Long id, Model model, RedirectAttributes flash);
 }
