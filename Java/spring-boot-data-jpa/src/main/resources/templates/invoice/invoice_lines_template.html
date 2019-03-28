@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!-- At the beginning this table is hidden -->
+<table th:fragment="invoiceLines" class="d-none">
+	<tbody id="invoiceLinesTemplate">
+		<!-- The {ID} field will be replaced by the product's id -->
+		<tr id="row_{ID}" class="bg-light align-middle" style="color: grey;">
+			<td class="d-none"><input type="hidden" name="invoiceLine_id[]" value="{ID}" ></td>
+			<td>{NAME}</td>
+			<td>{PRICE}</td>
+			<td><input type="number" id="quantity_{ID}" class="form-control col-sm-4" name="quantity[]" value="1" ></td>
+		</tr>
+	</tbody>
+</table>
+</body>
+</html>

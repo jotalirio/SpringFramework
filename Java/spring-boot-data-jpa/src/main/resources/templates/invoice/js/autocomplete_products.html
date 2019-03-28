@@ -28,7 +28,19 @@
 											  // In our case when a product is selected we will put the product's name 
 											  // into the input type text and will create an invoice line
 					
-					$("#search_product").val(ui.item.label);
+					// $("#search_product").val(ui.item.label);
+					
+					// Retrieve the HTML from 'invoice_lines_template.html' file. We are retrieving the HTML inside of <tbody> tag so the <tr> exactlly
+					var invoiceLine = $("#invoiceLinesTemplate").html();
+					
+					// Replacing values in the HTML template's code
+					invoiceLine = invoiceLine.replace(/{ID}/g, ui.item.value);
+					invoiceLine = invoiceLine.replace(/{NAME}/g, ui.item.label);
+					invoiceLine = invoiceLine.replace(/{PRICE}/g, ui.item.price);
+					
+					// Appending the result HTML to the table with id="loadInvoiceLines" <tbody> tag located inside of 'invoice/create.html' file
+					$("#loadInvoiceLines tbody").append(invoiceLine);
+					
 					return false;
 				}
 			});

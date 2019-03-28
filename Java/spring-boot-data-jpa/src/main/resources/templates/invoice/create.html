@@ -36,6 +36,20 @@
 							<input type="text" id="search_product" class="form-control" name="search_product" />
 						</div>
 					</div>
+					
+					<table th:replace="invoice/invoice_lines_template :: invoiceLines"></table>
+					<table id="loadInvoiceLines" class="table table-sm table-striped table-hover">
+						<thead class="thead-dark">
+							<tr>
+								<th>Name</th>
+								<th>Price</th>
+								<th>Quantity</th>
+							</tr>
+						</thead>
+						<tbody>
+						</tbody>
+					</table>
+					
 					<div class="form-group row">
 						<div class="col-sm-6">
 							<br>

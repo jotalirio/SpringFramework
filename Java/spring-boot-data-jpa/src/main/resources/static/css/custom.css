@@ -1,3 +1,7 @@
 .photo-size {
 	max-width: 25%;
 }
+
+#loadInvoiceLines {
+	margin-top: 50px;
+}
