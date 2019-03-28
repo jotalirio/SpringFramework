@@ -31,3 +31,7 @@
 #invoice-details-total-amount span {
 	margin-left: 20px;
 }
+
+#invoice-details-observations {
+	margin-top: 100px;
+}

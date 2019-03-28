@@ -35,7 +35,7 @@ INSERT INTO products (name, price, creation_date) VALUES ('Bianchi Bike Aro 26',
 INSERT INTO products (name, price, creation_date) VALUES ('Mica White Table', 299990, NOW());
 
 /* Mocked invoices */
-INSERT INTO invoices (description, observations, client_id, creation_date) VALUES ('Invoice Office Laptops', 'None observations', 1, NOW());
+INSERT INTO invoices (description, observations, client_id, creation_date) VALUES ('Invoice Office Laptops', null, 1, NOW());
 INSERT INTO invoices_lines (quantity, invoice_id, product_id) VALUES (1, 1, 1);
 INSERT INTO invoices_lines (quantity, invoice_id, product_id) VALUES (2, 1, 4);
 INSERT INTO invoices_lines (quantity, invoice_id, product_id) VALUES (1, 1, 5);
