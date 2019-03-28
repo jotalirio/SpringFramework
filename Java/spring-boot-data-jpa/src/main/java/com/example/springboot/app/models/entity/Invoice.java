@@ -111,6 +111,14 @@ public class Invoice implements Serializable {
     this.client = client;
   }
 
+  public List<InvoiceLine> getInvoiceLines() {
+    return invoiceLines;
+  }
+
+  public void setInvoiceLines(List<InvoiceLine> invoiceLines) {
+    this.invoiceLines = invoiceLines;
+  }
+  
   
   /* Methods */
   

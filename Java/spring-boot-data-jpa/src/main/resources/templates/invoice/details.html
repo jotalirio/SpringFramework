@@ -21,6 +21,26 @@
 					<li class="list-group-item" th:text="'Description: ' + ${invoice.description}"></li>
 					<li class="list-group-item" th:text="'Date: ' + ${invoice.creationDate}"></li>
 				</ul>
+				<div class="alert alert-info my-4" th:if="${#lists.isEmpty(invoice.invoiceLines)}" th:text="'There are no lines for the invoce: ' + ${invoice.description}"></div>
+				<table th:if="${not #lists.isEmpty(invoice.invoiceLines)}" class="table table-bordered table-striped table-hover text-center my-4">
+					<thead class="thead-inverse">
+						<tr>
+							<th>Product</th>
+							<th>Price</th>
+							<th>Quantity</th>
+							<th>Total</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="align-middle" th:each="invoiceLine: ${invoice.invoiceLines}">
+							<td class="align-middle" th:text="${invoiceLine.product.name}"></td>
+							<td class="align-middle" th:text="${invoiceLine.product.price}"></td>
+							<td class="align-middle" th:text="${invoiceLine.quantity}"></td>
+							<td class="align-middle" th:text="${invoiceLine.calculateAmount()}"></td>
+						</tr>
+					</tbody>
+				</table>
+				<h5 id="invoice-details-total-amount" class="float-right">Total<span class="badge badge-secondary" th:text="${invoice.total}"></span></h5>
 			</div>
 		</div>
 	</div>

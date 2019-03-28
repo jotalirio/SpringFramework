@@ -23,3 +23,11 @@
 #invoice_total_amount {
 	margin-left: 10px;
 }
+
+#invoice-details-total-amount {
+	padding-right: 20px;
+}
+
+#invoice-details-total-amount span {
+	margin-left: 20px;
+}
