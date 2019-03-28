@@ -41,11 +41,19 @@
 					// Appending the result HTML to the table with id="loadInvoiceLines" <tbody> tag located inside of 'invoice/create.html' file
 					$("#loadInvoiceLines tbody").append(invoiceLine);
 					
+					// Calculating the Total Amount
+					itemsHelper.calculateAmount(ui.item.value, ui.item.price, 1);
+					
 					return false;
 				}
 			});
 		});
 	
+		var itemsHelper = {
+				calculateAmount: function(id, price, quantity) {
+					$("#total_amount_" + id).html(parseInt(price) * parseInt(quantity));
+				}
+		}
 	</script>
 </body>
 </html>

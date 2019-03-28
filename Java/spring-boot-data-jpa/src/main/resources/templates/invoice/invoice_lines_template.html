@@ -10,7 +10,10 @@
 			<td class="d-none"><input type="hidden" name="invoiceLine_id[]" value="{ID}" ></td>
 			<td>{NAME}</td>
 			<td>{PRICE}</td>
-			<td><input type="number" id="quantity_{ID}" class="form-control col-sm-4" name="quantity[]" value="1" ></td>
+			<td><input type="number" id="quantity_{ID}" class="form-control col-sm-4" name="quantity[]" value="1" 
+					   onchange="itemsHelper.calculateAmount({ID}, {PRICE}, this.value);">
+			</td>
+			<td><span id="total_amount_{ID}">0</span></td>
 		</tr>
 	</tbody>
 </table>
