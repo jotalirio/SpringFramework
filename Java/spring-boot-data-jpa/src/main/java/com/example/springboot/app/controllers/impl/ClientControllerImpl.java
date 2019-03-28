@@ -44,10 +44,10 @@ public class ClientControllerImpl implements ClientController {
   private final Logger LOGGER = LoggerFactory.getLogger(ClientControllerImpl.class);
   
   @Autowired
-  ClientService clientService;
+  private ClientService clientService;
   
   @Autowired
-  UploadFileService uploadFileService;
+  private UploadFileService uploadFileService;
   
     // Use this method with IClientDao or IClientDaoCrudRepository
 //  @RequestMapping(value = "/list", method = RequestMethod.GET)
@@ -84,9 +84,9 @@ public class ClientControllerImpl implements ClientController {
   @RequestMapping(value = "/create", method = RequestMethod.POST)
   @Override
   public String save(@Valid Client client, BindingResult result, Model model, @RequestParam("file") MultipartFile photo, RedirectAttributes flash, SessionStatus sessionStatus) {
-    model.addAttribute(Constants.ATTRIBUTE_TITLE_KEY, Constants.ATTRIBUTE_TITLE_VALUE_NEW_CLIENT);
     // If the form data has errors, return to the create View showing the form
     if(result.hasErrors()) {
+      model.addAttribute(Constants.ATTRIBUTE_TITLE_KEY, Constants.ATTRIBUTE_TITLE_VALUE_NEW_CLIENT);
       return Constants.VIEW_CREATE;
     }
     // Checking the photo field
@@ -120,7 +120,7 @@ public class ClientControllerImpl implements ClientController {
     sessionStatus.setComplete();
     // Flash attribute
     flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_SUCCESS_KEY, flashMessage);
-    return "redirect:" + Constants.VIEW_LIST;
+    return "redirect:/" + Constants.VIEW_LIST;
   }
 
   @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
@@ -189,7 +189,7 @@ public class ClientControllerImpl implements ClientController {
       client = this.clientService.findOne(id);
       if(!client.isPresent()) {
         // Flash attribute
-        flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_ERROR_KEY, "The client ID does not exist in the database !!!");
+        flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_ERROR_KEY, "The client does not exist in the database !!!");
         return "redirect:/" + Constants.VIEW_LIST;
       }
     }
@@ -198,7 +198,7 @@ public class ClientControllerImpl implements ClientController {
       flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_ERROR_KEY, "The client ID must not be 0 !!!");
       return "redirect:/" + Constants.VIEW_LIST;
     }
-    model.put(Constants.ATTRIBUTE_TITLE_KEY, Constants.ATTRIBUTE_TITLE_VALUE_CLIENT_DETAILS + client.get().getName());
+    model.put(Constants.ATTRIBUTE_TITLE_KEY, Constants.ATTRIBUTE_TITLE_VALUE_CLIENT_DETAILS + client.get().getName() + " " + client.get().getSurname());
     model.put(Constants.ATTRIBUTE_CLIENT_KEY, client.get());
     return Constants.VIEW_DETAILS;
   }

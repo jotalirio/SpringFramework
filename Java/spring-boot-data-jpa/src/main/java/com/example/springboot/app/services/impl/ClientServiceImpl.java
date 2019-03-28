@@ -20,10 +20,10 @@ public class ClientServiceImpl implements ClientService {
 //  private IClientDao clientDao;
   
 //  @Autowired
-//  IClientDaoCrudRepository clientDao;
+//  private IClientDaoCrudRepository clientDao;
 
   @Autowired
-  ClientDaoPagingAndSortingRepository clientDao;
+  private ClientDaoPagingAndSortingRepository clientDao;
   
   @Transactional(readOnly = true)
   @Override
@@ -37,6 +37,7 @@ public class ClientServiceImpl implements ClientService {
     return (Page<Client>) this.clientDao.findAll(pageable);
   }
   
+  // The CRUD repository methods are Transactional by default but it is a good practise to indicate it explicitly
   @Transactional(readOnly = true)
   @Override
   public Optional<Client> findOne(Long id) {
@@ -54,6 +55,5 @@ public class ClientServiceImpl implements ClientService {
   public void delete(Long id) {
     this.clientDao.deleteById(id);
   }
-
 
 }

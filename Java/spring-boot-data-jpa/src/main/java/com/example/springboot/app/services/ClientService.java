@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.example.springboot.app.models.entity.Client;
+import com.example.springboot.app.models.entity.Product;
 
 public interface ClientService {
   
@@ -16,4 +17,5 @@ public interface ClientService {
   public Optional<Client> findOne(Long id);
   public void save(Client client);
   public void delete(Long id);
+  
 }

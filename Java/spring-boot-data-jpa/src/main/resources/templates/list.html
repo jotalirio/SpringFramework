@@ -10,7 +10,7 @@
 				<h4 class="card-title">
 					<a class="btn btn-secondary btn-xs" th:href="@{/create}" th:text="'New Client'"></a>
 				</h4>
-				<table class="table table-striped table-bordered text-center">
+				<table class="table table-striped table-hover text-center">
 					<thead class="thead-dark">
 						<tr>
 							<th>Id</th>
@@ -24,17 +24,17 @@
 					<tbody>
 						<tr class="bg-light align-middle" th:each="client: ${clients}">
 							<td class="align-middle">
-								<a class="btn btn-primary btn-xs" th:href="@{/details/} + ${client.id}" th:text="${client.id}"></a>
+								<a class="btn btn-info btn-xs" th:href="@{/details/} + ${client.id}" th:text="${client.id}"></a>
 							</td>
 							<td class="align-middle" th:text="${client.name}"></td>
 							<td class="align-middle" th:text="${client.surname}"></td>
 							<td class="align-middle" th:text="${client.email}"></td>
 							<td class="align-middle" th:text="${client.creationDate}"></td>
-							<td class="align-middle"><a class="btn btn-success btn-xs"
-								th:href="@{/edit/} + ${client.id}" th:text="'Edit'"></a> <a
-								class="btn btn-danger btn-xs"
-								th:href="@{/delete/} + ${client.id}" th:text="'Delete'"
-								onclick="return confirm('Do you want to delete this client?');"></a>
+							<td class="align-middle">
+								<a class="btn btn-success btn-xs" th:href="@{/edit/} + ${client.id}" th:text="'Edit'"></a> 
+								<a class="btn btn-danger btn-xs" th:href="@{/delete/} + ${client.id}" th:text="'Delete'" 
+								   onclick="return confirm('Do you want to delete this client?');"></a>
+							    <a class="btn btn-primary btn-xs" th:href="@{/invoice/create/} + ${client.id}" th:text="'Create Invoice'"></a>
 							</td>
 						</tr>
 					</tbody>

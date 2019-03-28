@@ -10,10 +10,13 @@ public interface Constants {
   public static final String ATTRIBUTE_TITLE_KEY = "title";
   public static final String ATTRIBUTE_TITLE_VALUE_LIST_CLIENTS = "List of Clients";
   public static final String ATTRIBUTE_TITLE_VALUE_NEW_CLIENT = "New Client";
-  public static final Object ATTRIBUTE_TITLE_VALUE_EDIT_CLIENT = "Edit Client";
-  public static final Object ATTRIBUTE_TITLE_VALUE_CLIENT_DETAILS = "Client Details: ";
+  public static final String ATTRIBUTE_TITLE_VALUE_EDIT_CLIENT = "Edit Client";
+  public static final String ATTRIBUTE_TITLE_VALUE_CLIENT_DETAILS = "Client Details: ";
+  public static final String ATTRIBUTE_TITLE_VALUE_NEW_INVOICE = "New Invoice";
+  public static final String ATTRIBUTE_TITLE_VALUE_INVOICE_DETAILS = "Invoice Details: ";
   public static final String ATTRIBUTE_CLIENTS_KEY = "clients";
   public static final String ATTRIBUTE_CLIENT_KEY = "client";
+  public static final String ATTRIBUTE_INVOICE_KEY = "invoice";
   public static final String ATTRIBUTE_FLASH_SUCCESS_KEY = "success";
   public static final String ATTRIBUTE_FLASH_ERROR_KEY = "error";
   public static final String ATTRIBUTE_FLASH_WARNING_KEY = "warning";
@@ -32,6 +35,7 @@ public interface Constants {
   public static final String EXTERNAL_UPLOADS_DIRECTORY = "//uploads";
   public static final String EXTERNAL_UPLOADS_IMAGES_DIRECTORY = "//images";
   public static final String FILENAME_IMAGE_NOT_FOUND = "image-not-found.png";
+  public static final String INVOICE_VIEWS_PATH = "invoice/";
 
 
   

@@ -22,6 +22,7 @@ public class ClientDaoImpl implements ClientDao {
   @SuppressWarnings("unchecked")
   @Override
   public List<Client> findAll() {
+    // Query at Entity level, not at Table level
     return entityManager.createQuery(FROM_CLIENT).getResultList();
   }
 

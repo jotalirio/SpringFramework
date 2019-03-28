@@ -1,3 +1,37 @@
 .photo-size {
 	max-width: 25%;
 }
+
+#loadInvoiceLines {
+	margin-top: 50px;
+}
+
+#loadInvoiceLines tbody tr td {
+	color: grey;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+#loadInvoiceLines tbody tr td a {
+	color: white;
+}
+
+.table-td-input-center {
+	margin: 0 auto !important;
+}
+
+#invoice_total_amount {
+	margin-left: 10px;
+}
+
+#invoice-details-total-amount {
+	padding-right: 20px;
+}
+
+#invoice-details-total-amount span {
+	margin-left: 20px;
+}
+
+#invoice-details-observations {
+	margin-top: 100px;
+}
