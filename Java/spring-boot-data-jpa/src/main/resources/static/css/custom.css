@@ -5,3 +5,17 @@
 #loadInvoiceLines {
 	margin-top: 50px;
 }
+
+#loadInvoiceLines tbody tr td {
+	color: grey;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+#loadInvoiceLines tbody tr td a {
+	color: white;
+}
+
+.table-td-input-center {
+	margin: 0 auto !important;
+}

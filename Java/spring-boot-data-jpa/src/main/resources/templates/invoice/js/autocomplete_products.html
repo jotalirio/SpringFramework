@@ -72,6 +72,9 @@
 				var quantity = $("#quantity_" + id).val() ? parseInt($("#quantity_" + id).val()) : 0;
 				$("#quantity_" + id).val(++quantity);
 				this.calculateAmount(id, price, quantity);
+			},
+			deleteInvoiceLine: function(id) {
+				$("#row_" + id).remove();
 			}
 		}
 	</script>
