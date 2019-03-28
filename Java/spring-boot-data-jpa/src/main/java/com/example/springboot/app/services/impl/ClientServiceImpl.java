@@ -20,37 +20,37 @@ public class ClientServiceImpl implements ClientService {
 //  private IClientDao clientDao;
   
 //  @Autowired
-//  IClientDaoCrudRepository clientDao;
+//  private IClientDaoCrudRepository clientDao;
 
   @Autowired
   private ClientDaoPagingAndSortingRepository clientDao;
   
-  @Transactional(readOnly = true)
   @Override
+  @Transactional(readOnly = true)
   public List<Client> getClients() {
     return (List<Client>) this.clientDao.findAll();
   }
 
-  @Transactional(readOnly = true)
   @Override
+  @Transactional(readOnly = true)
   public Page<Client> getClients(Pageable pageable) {
     return (Page<Client>) this.clientDao.findAll(pageable);
   }
   
-  @Transactional(readOnly = true)
   @Override
+  @Transactional(readOnly = true)
   public Optional<Client> findOne(Long id) {
     return this.clientDao.findById(id);
   }
   
-  @Transactional
   @Override
+  @Transactional
   public void save(Client client) {
     this.clientDao.save(client);
   }
 
-  @Transactional
   @Override
+  @Transactional
   public void delete(Long id) {
     this.clientDao.deleteById(id);
   }

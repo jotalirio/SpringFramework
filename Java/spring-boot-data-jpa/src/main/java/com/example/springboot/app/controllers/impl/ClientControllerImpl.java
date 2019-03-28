@@ -44,10 +44,10 @@ public class ClientControllerImpl implements ClientController {
   private final Logger LOGGER = LoggerFactory.getLogger(ClientControllerImpl.class);
   
   @Autowired
-  ClientService clientService;
+  private ClientService clientService;
   
   @Autowired
-  UploadFileService uploadFileService;
+  private UploadFileService uploadFileService;
   
     // Use this method with IClientDao or IClientDaoCrudRepository
 //  @RequestMapping(value = "/list", method = RequestMethod.GET)
