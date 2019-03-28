@@ -128,4 +128,10 @@ public class Client implements Serializable {
     this.invoices.add(invoice);
   }
 
+
+  @Override
+  public String toString() {
+    return name + " " + surname;
+  }
+
 }

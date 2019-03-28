@@ -133,7 +133,7 @@ public class InvoiceControllerImpl implements InvoiceController {
     }
     // Passing the invoice instance to the view
     model.addAttribute(Constants.ATTRIBUTE_TITLE_KEY, "Invoice: ".concat(invoice.get().getDescription()));
-    model.addAttribute(Constants.ATTRIBUTE_INVOICE_KEY, invoice);
+    model.addAttribute(Constants.ATTRIBUTE_INVOICE_KEY, invoice.get());
     return INVOICE_DETAILS_VIEW;
   }
 

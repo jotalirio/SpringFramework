@@ -4,10 +4,13 @@
 <body>
 	<header th:replace="layout/layout :: header"></header>
 	<div class="container py-4">
-				<div class="card bg-light">
+		<div class="card bg-light">
 			<div class="card-header" th:text="${title}"></div>
 			<div class="card-body">
 				<h4 class="card-title">
+					<a class="btn btn-light btn-xs" th:href="@{/list}" th:text="'&laquo; Back'"></a>
+				</h4>
+				<h4 class="card-title my-4">
 					<a class="btn btn-primary btn-xs" th:href="@{/invoice/create/} + ${client.id}" th:text="'Create Invoice'"></a>
 				</h4>
 				<img th:if="${#strings.length(client.photo) > 0}" class="img-thumbnail rounded float-left photo-size" th:src="@{'/uploads/images/' + ${client.photo}}" th:alt="${client.photo}">
@@ -18,21 +21,25 @@
 					<li class="list-group-item" th:text="${client.creationDate}"></li>
 				</ul>
 				<div th:if="${#lists.isEmpty(client.invoices)}" class="alert alert-info my-4" th:text="'There are no invoices assigned to the Client ' + ${client.name} + ' ' + ${client.surname}"></div>
-				<table th:if="${not #lists.isEmpty(client.invoices)}" class="table table-bordered table-striped my-4">
+				<table th:if="${not #lists.isEmpty(client.invoices)}" class="table table-bordered table-striped table-hover text-center my-4">
 				<thead class="thead-inverse">
 					<tr>
-						<th>Invoice</th>
+						<th>Reference</th>
 						<th>Description</th>
 						<th>Date</th>
 						<th>Total</th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr th:each="invoice: ${client.invoices}">
-						<td th:text="${invoice.id}"></td>
-						<td th:text="${invoice.description}"></td>
-						<td th:text="${invoice.creationDate}"></td>
-						<td th:text="${invoice.total}"></td>
+					<tr class="align-middle" th:each="invoice: ${client.invoices}">
+						<td class="align-middle" th:text="${invoice.id}"></td>
+						<td class="align-middle" th:text="${invoice.description}"></td>
+						<td class="align-middle" th:text="${invoice.creationDate}"></td>
+						<td class="align-middle" th:text="${invoice.total}"></td>
+						<td>
+							<a class="btn btn-info btn-xs" th:href="@{/invoice/details/} + ${invoice.id}" th:text="'Details'"></a>
+						</td>
 					</tr>
 				</tbody>
 				</table>
