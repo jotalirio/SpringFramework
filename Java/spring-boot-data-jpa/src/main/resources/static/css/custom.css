@@ -19,3 +19,7 @@
 .table-td-input-center {
 	margin: 0 auto !important;
 }
+
+#invoice_total_amount {
+	margin-left: 10px;
+}

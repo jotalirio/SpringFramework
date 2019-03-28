@@ -47,8 +47,8 @@
 						// Appending the result HTML to the table with id="loadInvoiceLines" <tbody> tag located inside of 'invoice/create.html' file
 						$("#loadInvoiceLines tbody").append(invoiceLine);
 						
-						// Calculating the Total Amount
-						itemsHelper.calculateAmount(ui.item.id, ui.item.price, 1);
+						// Calculating the invoice line Total Amount
+						itemsHelper.calculateInvoiceLineTotalAmount(ui.item.id, ui.item.price, 1);
 					}					
 					return false;
 				}
@@ -56,8 +56,9 @@
 		});
 	
 		var itemsHelper = {
-			calculateAmount: function(id, price, quantity) {
-				$("#total_amount_" + id).html(parseInt(price) * parseInt(quantity));
+			calculateInvoiceLineTotalAmount: function(id, price, quantity) {
+				$("#invoiceLine_total_amount_" + id).html(parseInt(price) * parseInt(quantity));
+				this.calculateInvoiceTotalAmount();
 			},
 			hasProduct: function(id) {
 				var exist = false;
@@ -71,10 +72,18 @@
 			increaseQuantity: function(id, price) {
 				var quantity = $("#quantity_" + id).val() ? parseInt($("#quantity_" + id).val()) : 0;
 				$("#quantity_" + id).val(++quantity);
-				this.calculateAmount(id, price, quantity);
+				this.calculateInvoiceLineTotalAmount(id, price, quantity);
 			},
 			deleteInvoiceLine: function(id) {
 				$("#row_" + id).remove();
+				this.calculateInvoiceTotalAmount();
+			},
+			calculateInvoiceTotalAmount: function() {
+				var total = 0;
+				$('span[id^="invoiceLine_total_amount_"]').each(function(){
+					total += parseInt($(this).html());
+				});
+				$("#invoice_total_amount").html(total);
 			}
 		}
 	</script>
