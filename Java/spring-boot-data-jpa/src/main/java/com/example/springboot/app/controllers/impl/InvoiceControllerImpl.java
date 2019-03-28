@@ -39,6 +39,8 @@ import com.example.springboot.app.utils.Constants;
 public class InvoiceControllerImpl implements InvoiceController {
 
   private static final String INVOICE_CREATE_VIEW = Constants.INVOICE_VIEWS_PATH + Constants.VIEW_CREATE;
+  private static final String INVOICE_DETAILS_VIEW = Constants.INVOICE_VIEWS_PATH + Constants.VIEW_DETAILS;
+
   private final Logger LOGGER = LoggerFactory.getLogger(InvoiceControllerImpl.class);
 
   
@@ -70,7 +72,6 @@ public class InvoiceControllerImpl implements InvoiceController {
     // Passing the invoice instance to the view
     model.put(Constants.ATTRIBUTE_INVOICE_KEY, invoice);
     model.put(Constants.ATTRIBUTE_TITLE_KEY, Constants.ATTRIBUTE_TITLE_VALUE_NEW_INVOICE);
-    
     return INVOICE_CREATE_VIEW;
   }
 
@@ -119,6 +120,21 @@ public class InvoiceControllerImpl implements InvoiceController {
     String flashMessage = "The new invoice was created successfully !!!"; 
     flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_SUCCESS_KEY, flashMessage);
     return "redirect:/details/" + invoice.getClient().getId();
+  }
+
+  @GetMapping("/details/{id}")
+  @Override
+  public String details(@PathVariable(value = "id") Long id, Model model, RedirectAttributes flash) {
+    // Fetching the invoice
+    Optional<Invoice> invoice = this.invoiceService.findById(id);
+    if (!invoice.isPresent()) {
+      flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_ERROR_KEY, "The invoice does not exist in the database !!!");
+      return "redirect:/list";
+    }
+    // Passing the invoice instance to the view
+    model.addAttribute(Constants.ATTRIBUTE_TITLE_KEY, "Invoice: ".concat(invoice.get().getDescription()));
+    model.addAttribute(Constants.ATTRIBUTE_INVOICE_KEY, invoice);
+    return INVOICE_DETAILS_VIEW;
   }
 
   

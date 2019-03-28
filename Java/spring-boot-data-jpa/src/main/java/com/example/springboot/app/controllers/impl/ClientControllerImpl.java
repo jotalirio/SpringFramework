@@ -189,7 +189,7 @@ public class ClientControllerImpl implements ClientController {
       client = this.clientService.findOne(id);
       if(!client.isPresent()) {
         // Flash attribute
-        flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_ERROR_KEY, "The client ID does not exist in the database !!!");
+        flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_ERROR_KEY, "The client does not exist in the database !!!");
         return "redirect:/" + Constants.VIEW_LIST;
       }
     }

@@ -12,5 +12,13 @@ import com.example.springboot.app.models.entity.Invoice;
 public interface InvoiceController {
 
   public String create(Long clientId, Map<String, Object> model, RedirectAttributes flash);
-  public String save(Invoice invoice, BindingResult result, Model model, Long[] invoiceLinesId, Integer[] quantities, RedirectAttributes flash, SessionStatus sessionStatus);
+  public String save(Invoice invoice, 
+                     BindingResult result, 
+                     Model model, 
+                     Long[] invoiceLinesId, 
+                     Integer[] quantities, 
+                     RedirectAttributes flash, 
+                     SessionStatus sessionStatus);
+  
+  public String details(Long id, Model model, RedirectAttributes flash);
 }

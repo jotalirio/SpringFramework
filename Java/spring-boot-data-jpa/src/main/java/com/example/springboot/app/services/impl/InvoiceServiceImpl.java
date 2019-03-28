@@ -1,5 +1,7 @@
 package com.example.springboot.app.services.impl;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +20,12 @@ public class InvoiceServiceImpl implements InvoiceService {
   @Override
   public void save(Invoice invoice) {
     this.invoiceDao.save(invoice);
+  }
+
+  @Transactional(readOnly = true)
+  @Override
+  public Optional<Invoice> findById(Long id) {
+    return this.invoiceDao.findById(id);
   }
 
 }
