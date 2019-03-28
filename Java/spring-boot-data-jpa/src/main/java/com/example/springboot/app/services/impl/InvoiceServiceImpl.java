@@ -14,8 +14,8 @@ public class InvoiceServiceImpl implements InvoiceService {
   @Autowired
   private InvoiceDao invoiceDao;
   
-  @Override
   @Transactional
+  @Override
   public void save(Invoice invoice) {
     this.invoiceDao.save(invoice);
   }

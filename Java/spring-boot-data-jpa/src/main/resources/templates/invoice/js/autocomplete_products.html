@@ -53,6 +53,13 @@
 					return false;
 				}
 			});
+			
+			// When the form is submitted we remove the 'invoice_lines_template.html' in order to not send this data. Is this data is sent then there will be 
+			// an error because the 'input type="hidden"' will be sent with a non numeric: 'value="{ID}"'
+			$("form").submit(function() {
+				$("#invoiceLinesTemplate").remove();
+				return;
+			});
 		});
 	
 		var itemsHelper = {

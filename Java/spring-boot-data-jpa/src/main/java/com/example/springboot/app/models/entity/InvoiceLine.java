@@ -46,9 +46,17 @@ public class InvoiceLine implements Serializable {
     this.quantity = quantity;
   }
 
+  public Product getProduct() {
+    return product;
+  }
+
+  public void setProduct(Product product) {
+    this.product = product;
+  }
+  
   
   /* Methods */
-  
+
   public Double calculateAmount() {
     return this.quantity.doubleValue() * this.product.getPrice();
   }

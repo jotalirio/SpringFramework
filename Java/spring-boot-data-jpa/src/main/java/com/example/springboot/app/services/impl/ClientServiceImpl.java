@@ -25,32 +25,33 @@ public class ClientServiceImpl implements ClientService {
   @Autowired
   private ClientDaoPagingAndSortingRepository clientDao;
   
-  @Override
   @Transactional(readOnly = true)
+  @Override
   public List<Client> getClients() {
     return (List<Client>) this.clientDao.findAll();
   }
 
-  @Override
   @Transactional(readOnly = true)
+  @Override
   public Page<Client> getClients(Pageable pageable) {
     return (Page<Client>) this.clientDao.findAll(pageable);
   }
   
-  @Override
+  // The CRUD repository methods are Transactional by default but it is a good practise to indicate it explicitly
   @Transactional(readOnly = true)
+  @Override
   public Optional<Client> findOne(Long id) {
     return this.clientDao.findById(id);
   }
   
-  @Override
   @Transactional
+  @Override
   public void save(Client client) {
     this.clientDao.save(client);
   }
 
-  @Override
   @Transactional
+  @Override
   public void delete(Long id) {
     this.clientDao.deleteById(id);
   }
