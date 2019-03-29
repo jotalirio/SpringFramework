@@ -1,7 +1,6 @@
 package com.example.springboot.app.services.impl;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,10 +16,10 @@ import com.example.springboot.app.services.ClientService;
 public class ClientServiceImpl implements ClientService {
 
 //  @Autowired
-//  private IClientDao clientDao;
+//  private ClientDao clientDao;
   
 //  @Autowired
-//  private IClientDaoCrudRepository clientDao;
+//  private ClientDaoCrudRepository clientDao;
 
   @Autowired
   private ClientDaoPagingAndSortingRepository clientDao;
@@ -40,10 +39,16 @@ public class ClientServiceImpl implements ClientService {
   // The CRUD repository methods are Transactional by default but it is a good practise to indicate it explicitly
   @Transactional(readOnly = true)
   @Override
-  public Optional<Client> findOne(Long id) {
-    return this.clientDao.findById(id);
+  public Client findById(Long id) {
+    return this.clientDao.findById(id).orElse(null);
   }
   
+  @Transactional(readOnly = true)
+  @Override
+  public Client fetchByIdWithInvoices(Long id) {
+    return this.clientDao.fetchByIdWithInvoices(id);
+  }
+
   @Transactional
   @Override
   public void save(Client client) {
