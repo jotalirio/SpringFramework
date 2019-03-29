@@ -7,6 +7,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 public interface LoginController {
 
-  public String login(Model model, Principal principal, RedirectAttributes flash);
+  public String login(String error, Model model, Principal principal, RedirectAttributes flash);
   
 }
