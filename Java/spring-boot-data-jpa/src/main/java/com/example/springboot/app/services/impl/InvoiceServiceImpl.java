@@ -30,8 +30,8 @@ public class InvoiceServiceImpl implements InvoiceService {
 
   @Transactional(readOnly = true)
   @Override
-  public Optional<Invoice> findById(Long id) {
-    return this.invoiceDao.findById(id);
+  public Invoice findById(Long id) {
+    return this.invoiceDao.findById(id).orElse(null);
   }
 
   @Transactional(readOnly = true)

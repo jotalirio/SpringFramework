@@ -1,7 +1,6 @@
 package com.example.springboot.app.services.impl;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,8 +18,8 @@ public class ProductServiceImpl implements ProductService {
   
   @Transactional(readOnly = true)
   @Override
-  public Optional<Product> findById(Long id) {
-    return this.productDao.findById(id);
+  public Product findById(Long id) {
+    return this.productDao.findById(id).orElse(null);
   }
 
   @Transactional(readOnly = true)

@@ -121,39 +121,7 @@ public class ClientControllerImpl implements ClientController {
     // Flash attribute
     flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_SUCCESS_KEY, flashMessage);
     return "redirect:/" + Constants.VIEW_LIST;
-  }
-
-  
-  /* Using 'fetch = FetchType.LAZY' JPA strategy */
-  
-//  @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
-//  @Override
-//  public String edit(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
-//    // Getting the Client to be updated
-//    Optional<Client> client = null;
-//    // Client exists
-//    if(id > 0) {
-//      client = this.clientService.findOne(id);
-//      if(!client.isPresent()) {
-//        // Flash attribute
-//        flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_ERROR_KEY, "The client ID does not exist in the database !!!");
-//        return "redirect:/" + Constants.VIEW_LIST;
-//      }
-//    }
-//    else { 
-//      // Client does not exist
-//      // Flash attribute
-//      flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_ERROR_KEY, "The client ID can not be null !!!");
-//      return "redirect:" + Constants.VIEW_LIST;
-//    }
-//    model.put(Constants.ATTRIBUTE_TITLE_KEY, Constants.ATTRIBUTE_TITLE_VALUE_EDIT_CLIENT);
-//    model.put(Constants.ATTRIBUTE_CLIENT_KEY, client);
-//    return Constants.VIEW_CREATE;
-//  }
-
-  
-  
-  /* Using LEFT JOIN FETCH */ 
+  }  
   
   @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
   @Override
@@ -162,6 +130,9 @@ public class ClientControllerImpl implements ClientController {
     Client client = null;
     // Client exists
     if(id > 0) {
+      /* Using 'fetch = FetchType.LAZY' JPA strategy */
+//      client = this.clientService.findOne(id);
+      /* Using LEFT JOIN FETCH */
       client = this.clientService.fetchByIdWithInvoices(id);
       if(client == null) {
         // Flash attribute
@@ -180,51 +151,15 @@ public class ClientControllerImpl implements ClientController {
     return Constants.VIEW_CREATE;
   }
   
-  
-  /* Using 'fetch = FetchType.LAZY' JPA strategy */ 
-  
-//  @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
-//  @Override
-//  public String delete(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
-//    // Client exists
-//    if(id > 0) {
-//      // Fetching the client
-//      Optional<Client> client = this.clientService.findOne(id);
-//      if(!client.isPresent()) {
-//        // Flash attribute
-//        flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_ERROR_KEY, "The client ID does not exist in the database !!!");
-//        return "redirect:/" + Constants.VIEW_LIST;
-//      }
-//      this.clientService.delete(id);
-//      // Flash attribute
-//      flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_SUCCESS_KEY, "The client was removed successfully !!!");
-//      // Deleting the Client´s photo
-//      if(this.uploadFileService.deleteImage(client.get().getPhoto())) {
-//        // Flash attribute
-//        flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_INFO_KEY, "The client´s photo '" + client.get().getPhoto() + "' was deleted successfully !!!");
-//      }
-//      else {
-//        LOGGER.warn("There was a problem deleting the client´s photo '" + client.get().getPhoto() + "'.");
-//      }
-//    }
-//    else {
-//      // Flash attribute
-//      flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_ERROR_KEY, "The client ID must not be 0 !!!");
-//    }
-//    return "redirect:/" + Constants.VIEW_LIST;
-//  }
-
-  
-  
-  
-  /* Using LEFT JOIN FETCH */ 
-  
   @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
   @Override
   public String delete(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
     // Client exists
     if(id > 0) {
       // Fetching the client
+      /* Using 'fetch = FetchType.LAZY' JPA strategy */ 
+//      Client client = this.clientService.findOne(id);
+      /* Using LEFT JOIN FETCH */ 
       Client client = this.clientService.fetchByIdWithInvoices(id);
       if(client == null) {
         // Flash attribute
@@ -251,39 +186,6 @@ public class ClientControllerImpl implements ClientController {
     return "redirect:/" + Constants.VIEW_LIST;
   }
   
-  
-  
-  
-  /* Using 'fetch = FetchType.LAZY' JPA strategy */
-  
-//  @GetMapping(value="/details/{id}")
-//  @Override
-//  public String details(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
-//    Optional<Client> client = null;
-//    // Client exists
-//    if(id > 0) {
-//      // Fetching the client
-//      client = this.clientService.findOne(id);
-//      if(!client.isPresent()) {
-//        // Flash attribute
-//        flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_ERROR_KEY, "The client does not exist in the database !!!");
-//        return "redirect:/" + Constants.VIEW_LIST;
-//      }
-//    }
-//    else {
-//      // Flash attribute
-//      flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_ERROR_KEY, "The client ID must not be 0 !!!");
-//      return "redirect:/" + Constants.VIEW_LIST;
-//    }
-//    model.put(Constants.ATTRIBUTE_TITLE_KEY, Constants.ATTRIBUTE_TITLE_VALUE_CLIENT_DETAILS + client.get().getName() + " " + client.get().getSurname());
-//    model.put(Constants.ATTRIBUTE_CLIENT_KEY, client.get());
-//    return Constants.VIEW_DETAILS;
-//  }
-  
-  
-  
-  /* Using LEFT JOIN FETCH */ 
-  
   @GetMapping(value="/details/{id}")
   @Override
   public String details(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
@@ -291,6 +193,9 @@ public class ClientControllerImpl implements ClientController {
     // Client exists
     if(id > 0) {
       // Fetching the client
+      /* Using 'fetch = FetchType.LAZY' JPA strategy */
+//      client = this.clientService.findOne(id);
+      /* Using LEFT JOIN FETCH */ 
       client = this.clientService.fetchByIdWithInvoices(id);
       if(client == null) {
         // Flash attribute
@@ -308,7 +213,6 @@ public class ClientControllerImpl implements ClientController {
     return Constants.VIEW_DETAILS;
   }
   
-  
   // Using .+ Spring avoid to split the filename deleting the image extension
   @GetMapping(value = "/uploads/images/{filename:.+}")
   public ResponseEntity<Resource> getPhoto(@PathVariable(value = "filename") String fileName) {
@@ -324,5 +228,6 @@ public class ClientControllerImpl implements ClientController {
     }
     return responseEntity;
   }
+  
   
 }

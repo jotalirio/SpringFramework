@@ -8,7 +8,7 @@ public interface ClientDao {
 
   // abstract methods
   public List<Client> findAll();
-  public Client findOne(Long id);
+  public Client findById(Long id);
   public void save(Client client);
   public void delete(Long id);
 }

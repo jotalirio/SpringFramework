@@ -27,7 +27,7 @@ public class ClientDaoImpl implements ClientDao {
   }
 
   @Override
-  public Client findOne(Long id) {
+  public Client findById(Long id) {
     return entityManager.find(Client.class, id);
   }
   
@@ -45,7 +45,7 @@ public class ClientDaoImpl implements ClientDao {
 
   @Override
   public void delete(Long id) {
-    entityManager.remove(this.findOne(id));
+    entityManager.remove(this.findById(id));
   }
 
 }

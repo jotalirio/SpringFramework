@@ -1,9 +1,7 @@
 package com.example.springboot.app.controllers.impl;
 
 import java.util.Map;
-import java.util.Optional;
 
-import javax.persistence.FetchType;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -59,16 +57,16 @@ public class InvoiceControllerImpl implements InvoiceController {
   @Override
   public String create(@PathVariable(value = "clientId") Long clientId, Map<String, Object> model, RedirectAttributes flash) {
     
-    Optional<Client> client = this.clientService.findOne(clientId);
+    Client client = this.clientService.findById(clientId);
     
-    if(!client.isPresent()) {
+    if(client == null) {
       flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_ERROR_KEY, "The client ID does not exist in the database !!!");
       return "redirect:/" + Constants.VIEW_LIST;
     }
     
     // Here we make the relation between the invoice and its client
     Invoice invoice = new Invoice();
-    invoice.setClient(client.get());
+    invoice.setClient(client);
     
     // Passing the invoice instance to the view
     model.put(Constants.ATTRIBUTE_INVOICE_KEY, invoice);
@@ -101,11 +99,11 @@ public class InvoiceControllerImpl implements InvoiceController {
     for (int i = 0; i < invoiceLinesId.length; i++) {
       // We fetch the product by id
       Long product_id = invoiceLinesId[i];
-      Optional<Product> product = this.productService.findById(product_id);
+      Product product = this.productService.findById(product_id);
       
       // We create the invoice line containing the product in question and the quantity of product
       InvoiceLine invoiceLine = new InvoiceLine();
-      invoiceLine.setProduct(product.get());
+      invoiceLine.setProduct(product);
       invoiceLine.setQuantity(quantities[i]);
       
       // Adding the invoice line to the invoice
@@ -127,44 +125,24 @@ public class InvoiceControllerImpl implements InvoiceController {
   @Override
   public String delete(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
     // Fetching the invoice
-    Optional<Invoice> invoice = this.invoiceService.findById(id);
-    if (invoice.isPresent()) {
+    Invoice invoice = this.invoiceService.findById(id);
+    if (invoice != null) {
       this.invoiceService.delete(id);
       flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_SUCCESS_KEY, "The invoice was deleted successfully !!!");
-      return "redirect:/details/" + invoice.get().getClient().getId();
+      return "redirect:/details/" + invoice.getClient().getId();
     }
     // Error deleting the invoice
     flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_ERROR_KEY, "ERROR trying to delete invoice. The invoce does not exist in the database !!!");
     return "redirect:/list";
   }
 
-  
-  
-/* Using 'fetch = FetchType.LAZY' JPA strategy */ 
-  
-//  @GetMapping("/details/{id}")
-//  @Override
-//  public String details(@PathVariable(value = "id") Long id, Model model, RedirectAttributes flash) {
-//    // Fetching the invoice
-//    Optional<Invoice> invoice = this.invoiceService.findById(id);
-//    if (!invoice.isPresent()) {
-//      flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_ERROR_KEY, "The invoice does not exist in the database !!!");
-//      return "redirect:/list";
-//    }
-//    // Passing the invoice instance to the view
-//    model.addAttribute(Constants.ATTRIBUTE_TITLE_KEY, "Invoice: ".concat(invoice.get().getDescription()));
-//    model.addAttribute(Constants.ATTRIBUTE_INVOICE_KEY, invoice.get());
-//    return INVOICE_DETAILS_VIEW;
-//  }
-
-  
-  
-/* Using LEFT JOIN FETCH */  
-
   @GetMapping("/details/{id}")
   @Override
   public String details(@PathVariable(value = "id") Long id, Model model, RedirectAttributes flash) {
     // Fetching the invoice
+    /* Using 'fetch = FetchType.LAZY' JPA strategy */
+//    Invoice invoice = this.invoiceService.findById(id);
+    /* Using LEFT JOIN FETCH */  
     Invoice invoice = this.invoiceService.fetchByIdWithClientWithInvoiceLineWithProduct(id);
     if (invoice == null) {
       flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_ERROR_KEY, "The invoice does not exist in the database !!!");
