@@ -1,7 +1,6 @@
 package com.example.springboot.app.controllers.impl;
 
 import java.util.Map;
-import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -59,7 +58,7 @@ public class ClientControllerImpl implements ClientController {
 //    return Constants.VIEW_LIST;
 //  }
 
-  @RequestMapping(value = "/list", method = RequestMethod.GET)
+  @RequestMapping(value = {"/", "/list"}, method = RequestMethod.GET)
   @SuppressWarnings({ "unchecked", "rawtypes" })
   @Override
   public String listClients(@RequestParam(name = "page", defaultValue = Constants.FIRST_PAGE) int page, Model model) {
