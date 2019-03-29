@@ -34,4 +34,11 @@ public class InvoiceServiceImpl implements InvoiceService {
     return this.invoiceDao.findById(id);
   }
 
+  @Transactional(readOnly = true)
+  @Override
+  public Invoice fetchByIdWithClientWithInvoiceLineWithProduct(Long id) {
+    return this.invoiceDao.fetchByIdWithClientWithInvoiceLineWithProduct(id);
+  }
+
+  
 }

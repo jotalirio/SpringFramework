@@ -3,6 +3,7 @@ package com.example.springboot.app.controllers.impl;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.persistence.FetchType;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -137,20 +138,42 @@ public class InvoiceControllerImpl implements InvoiceController {
     return "redirect:/list";
   }
 
+  
+  
+/* Using 'fetch = FetchType.LAZY' JPA strategy */ 
+  
+//  @GetMapping("/details/{id}")
+//  @Override
+//  public String details(@PathVariable(value = "id") Long id, Model model, RedirectAttributes flash) {
+//    // Fetching the invoice
+//    Optional<Invoice> invoice = this.invoiceService.findById(id);
+//    if (!invoice.isPresent()) {
+//      flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_ERROR_KEY, "The invoice does not exist in the database !!!");
+//      return "redirect:/list";
+//    }
+//    // Passing the invoice instance to the view
+//    model.addAttribute(Constants.ATTRIBUTE_TITLE_KEY, "Invoice: ".concat(invoice.get().getDescription()));
+//    model.addAttribute(Constants.ATTRIBUTE_INVOICE_KEY, invoice.get());
+//    return INVOICE_DETAILS_VIEW;
+//  }
+
+  
+  
+/* Using LEFT JOIN FETCH */  
+
   @GetMapping("/details/{id}")
   @Override
   public String details(@PathVariable(value = "id") Long id, Model model, RedirectAttributes flash) {
     // Fetching the invoice
-    Optional<Invoice> invoice = this.invoiceService.findById(id);
-    if (!invoice.isPresent()) {
+    Invoice invoice = this.invoiceService.fetchByIdWithClientWithInvoiceLineWithProduct(id);
+    if (invoice == null) {
       flash.addFlashAttribute(Constants.ATTRIBUTE_FLASH_ERROR_KEY, "The invoice does not exist in the database !!!");
       return "redirect:/list";
     }
     // Passing the invoice instance to the view
-    model.addAttribute(Constants.ATTRIBUTE_TITLE_KEY, "Invoice: ".concat(invoice.get().getDescription()));
-    model.addAttribute(Constants.ATTRIBUTE_INVOICE_KEY, invoice.get());
+    model.addAttribute(Constants.ATTRIBUTE_TITLE_KEY, "Invoice: ".concat(invoice.getDescription()));
+    model.addAttribute(Constants.ATTRIBUTE_INVOICE_KEY, invoice);
     return INVOICE_DETAILS_VIEW;
   }
-
   
 }
