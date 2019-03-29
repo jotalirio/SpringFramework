@@ -44,6 +44,12 @@ public class ClientServiceImpl implements ClientService {
     return this.clientDao.findById(id);
   }
   
+  @Transactional(readOnly = true)
+  @Override
+  public Client fetchByIdWithInvoices(Long id) {
+    return this.clientDao.fetchByIdWithInvoices(id);
+  }
+
   @Transactional
   @Override
   public void save(Client client) {
