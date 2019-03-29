@@ -128,13 +128,13 @@ public class Invoice implements Serializable {
   
   public Double getTotal() {
     
-    Double totalAmount = 0.0;
-    for (InvoiceLine invoiceLine : this.invoiceLines) {
-      totalAmount += invoiceLine.calculateAmount();
-    }
-    return totalAmount;
+//    Double totalAmount = 0.0;
+//    for (InvoiceLine invoiceLine : this.invoiceLines) {
+//      totalAmount += invoiceLine.calculateAmount();
+//    }
+//    return totalAmount;
     
     // Using streams
-//    return this.invoiceLines.stream().mapToDouble( it -> it.calculateAmount()).reduce(0.0, Double::sum);
+    return this.invoiceLines.stream().mapToDouble( it -> it.calculateAmount()).reduce(0.0, Double::sum);
   }
 }
