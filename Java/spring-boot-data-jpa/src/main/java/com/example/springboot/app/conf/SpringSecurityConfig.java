@@ -27,7 +27,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                             .antMatchers("/products/**").hasAnyRole("ADMIN")
                             .anyRequest().authenticated()
                             .and()
-                            .formLogin().permitAll() // Log in page allowed to all users 
+                              .formLogin().loginPage("/login") // Configure the login page by setting up the '/login/ path from LoginController
+                              .permitAll() // Log in page allowed to all users 
                             .and()
                             .logout().permitAll(); // Log out page allowed to all users 
   }
