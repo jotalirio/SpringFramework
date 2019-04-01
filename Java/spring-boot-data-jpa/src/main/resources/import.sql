@@ -42,3 +42,11 @@ INSERT INTO invoices_lines (quantity, invoice_id, product_id) VALUES (1, 1, 5);
 INSERT INTO invoices_lines (quantity, invoice_id, product_id) VALUES (1, 1, 7);
 INSERT INTO invoices (description, observations, client_id, creation_date) VALUES ('Invoice Bike', 'The colour is dark red', 1, NOW());
 INSERT INTO invoices_lines (quantity, invoice_id, product_id) VALUES (3, 2, 6);
+
+
+/* Populate users and roles */
+INSERT INTO users (username, password, enabled) VALUES ('lirio', '$2a$10$aPyYUm4fOa52V7m0.h0sme/oaK90kTS50.r.Lw3OBs.U65v//vQge', 1);
+INSERT INTO users (username, password, enabled) VALUES ('admin', '$2a$10$KGKoYpATurPvMoBw.BRAluOq5ut4dtOCaUUL7up7/tyixaRA3HhB6', 1);
+INSERT INTO authorities (user_id, authority) VALUES (1, 'ROLE_USER');
+INSERT INTO authorities (user_id, authority) VALUES (2, 'ROLE_USER');
+INSERT INTO authorities (user_id, authority) VALUES (2, 'ROLE_ADMIN');
