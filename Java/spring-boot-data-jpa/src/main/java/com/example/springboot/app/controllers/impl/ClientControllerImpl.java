@@ -1,8 +1,9 @@
 package com.example.springboot.app.controllers.impl;
 
+import java.util.Collection;
 import java.util.Map;
-import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -15,6 +16,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -41,7 +50,7 @@ import com.example.springboot.app.utils.paginator.PageRender;
 @SessionAttributes(Constants.ATTRIBUTE_CLIENT_KEY) 
 public class ClientControllerImpl implements ClientController {
 
-  private final Logger LOGGER = LoggerFactory.getLogger(ClientControllerImpl.class);
+  private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
   
   @Autowired
   private ClientService clientService;
@@ -59,10 +68,50 @@ public class ClientControllerImpl implements ClientController {
 //    return Constants.VIEW_LIST;
 //  }
 
-  @RequestMapping(value = "/list", method = RequestMethod.GET)
+  @RequestMapping(value = {"/", "/list"}, method = RequestMethod.GET)
   @SuppressWarnings({ "unchecked", "rawtypes" })
   @Override
-  public String listClients(@RequestParam(name = "page", defaultValue = Constants.FIRST_PAGE) int page, Model model) {
+  public String listClients(@RequestParam(name = "page", defaultValue = Constants.FIRST_PAGE) int page, Model model, 
+                            Authentication authentication, HttpServletRequest request) {
+    
+    if (authentication != null) {
+      LOGGER.info("Hi authenticated user, your username is: ".concat(authentication.getName()));
+    }
+    
+    // We can retrieve the Authentication object in a static way instead passing it to the method by parameter
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    if (auth != null) {
+      LOGGER.info("Retrieving the Authentication object in a static way -> Authenticated user, username: ".concat(auth.getName()));
+    }
+    
+    // We checks the User's role
+    if (this.hasRole("ROLE_ADMIN")) {
+      LOGGER.info("Using the custom 'hasRole()' method -> Hi ".concat(auth.getName()).concat(", you have access to this resource !!!"));
+    }
+    else {
+      LOGGER.info("Using the custom 'hasRole()' method -> Hi ".concat(auth.getName()).concat(", you do NOT have access to this resource !!!"));
+    }
+    
+    // Getting the object that wraps the HttpServletRequest object in order to check if the user is authorised to access (checking the role)
+//    SecurityContextHolderAwareRequestWrapper securityContext = new SecurityContextHolderAwareRequestWrapper(request, "ROLE_");
+//    if (securityContext.isUserInRole("ADMIN")) {
+    SecurityContextHolderAwareRequestWrapper securityContext = new SecurityContextHolderAwareRequestWrapper(request, "");
+    if (securityContext.isUserInRole("ROLE_ADMIN")) {
+
+      LOGGER.info("Using the 'SecurityContextHolderAwareRequestWrapper' -> Hi ".concat(auth.getName()).concat(", you have access to this resource !!!"));
+    }
+    else {
+      LOGGER.info("Using the 'SecurityContextHolderAwareRequestWrapper' -> Hi ".concat(auth.getName()).concat(", you do NOT have access to this resource !!!"));
+    }
+    // Checking the role using the 'HttpServletRequest' directly
+    if (request.isUserInRole("ROLE_ADMIN")) {
+      LOGGER.info("Using the 'HttpServletRequest' -> Hi ".concat(auth.getName()).concat(", you have access to this resource !!!"));
+    }
+    else {
+      LOGGER.info("Using the 'HttpServletRequest' -> Hi ".concat(auth.getName()).concat(", you do NOT have access to this resource !!!"));
+    }
+
+    
     Pageable pageRequest = PageRequest.of(page, Constants.RESULTS_PER_PAGE);
     Page<Client> clients = this.clientService.getClients(pageRequest);
     PageRender<Client> pageRender = new PageRender("/list", clients);
@@ -72,6 +121,7 @@ public class ClientControllerImpl implements ClientController {
     return Constants.VIEW_LIST;
   }
   
+  @Secured("ROLE_ADMIN")
   @RequestMapping(value = "/create", method = RequestMethod.GET)
   @Override
   public String create(Map<String, Object> model) {
@@ -81,6 +131,7 @@ public class ClientControllerImpl implements ClientController {
     return Constants.VIEW_CREATE;
   }
 
+  @Secured("ROLE_ADMIN")
   @RequestMapping(value = "/create", method = RequestMethod.POST)
   @Override
   public String save(@Valid Client client, BindingResult result, Model model, @RequestParam("file") MultipartFile photo, RedirectAttributes flash, SessionStatus sessionStatus) {
@@ -123,6 +174,9 @@ public class ClientControllerImpl implements ClientController {
     return "redirect:/" + Constants.VIEW_LIST;
   }  
   
+//  @Secured("ROLE_ADMIN")
+//  @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')") // We can use this annotation instead '@Secured', they both are equivalent
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN')") // We can use this annotation instead '@Secured', they both are equivalent
   @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
   @Override
   public String edit(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
@@ -151,6 +205,7 @@ public class ClientControllerImpl implements ClientController {
     return Constants.VIEW_CREATE;
   }
   
+  @Secured("ROLE_ADMIN")
   @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
   @Override
   public String delete(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
@@ -186,6 +241,8 @@ public class ClientControllerImpl implements ClientController {
     return "redirect:/" + Constants.VIEW_LIST;
   }
   
+//  @Secured("ROLE_USER")
+  @PreAuthorize("hasRole('ROLE_USER')") // We can use this annotation instead '@Secured', they both are equivalent
   @GetMapping(value="/details/{id}")
   @Override
   public String details(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
@@ -214,6 +271,8 @@ public class ClientControllerImpl implements ClientController {
   }
   
   // Using .+ Spring avoid to split the filename deleting the image extension
+//  @Secured({"ROLE_USER", "ROLE_ADMIN"})
+  @Secured({"ROLE_USER"})
   @GetMapping(value = "/uploads/images/{filename:.+}")
   public ResponseEntity<Resource> getPhoto(@PathVariable(value = "filename") String fileName) {
     Resource resource = this.uploadFileService.loadImage(fileName);
@@ -229,5 +288,42 @@ public class ClientControllerImpl implements ClientController {
     return responseEntity;
   }
   
+  
+  private boolean hasRole(String role) {
+    SecurityContext context = SecurityContextHolder.getContext();
+    if (context == null) {
+      return false;
+    }
+    Authentication auth = context.getAuthentication();
+    if (auth == null) {
+      return false;
+    }
+    
+
+
+    // Any class 'Role' or representing a 'Role' has to implement the 'GrantedAuthority' interface
+    // A collection of any class that inherits from GrantedAuthority
+    Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+    if (authorities ==  null) {
+      return false;
+    }
+    /*
+     * 
+     
+    for (GrantedAuthority authority : authorities) {
+      if (role.equals(authority.getAuthority())) {
+        LOGGER.info("Hi user ".concat(auth.getName()).concat(", you role is: ").concat(authority.getAuthority()));
+        return true;
+      }
+    }
+    return false;
+    
+    *
+    */
+    
+    // Equivalent way to the previous one using for: Using the 'SimpleGrantedAuthority' class that implements the 'GrantedAuthority' interface
+    return authorities.contains(new SimpleGrantedAuthority(role));
+    
+  }
   
 }

@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,6 +30,7 @@ import com.example.springboot.app.services.InvoiceService;
 import com.example.springboot.app.services.ProductService;
 import com.example.springboot.app.utils.Constants;
 
+@Secured("ROLE_ADMIN")
 @Controller
 @RequestMapping("/invoice")
 // We are storing into the Session the invoice entity when we create new Invoice until the invoice's form 
