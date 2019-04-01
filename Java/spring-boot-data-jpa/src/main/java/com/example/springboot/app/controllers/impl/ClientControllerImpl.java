@@ -1,5 +1,6 @@
 package com.example.springboot.app.controllers.impl;
 
+import java.util.Collection;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -15,6 +16,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -73,6 +77,14 @@ public class ClientControllerImpl implements ClientController {
     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
     if (auth != null) {
       LOGGER.info("Retrieving the Authentication object in a static way -> Authenticated user, username: ".concat(auth.getName()));
+    }
+    
+    // We checks the User's role
+    if (this.hasRole("ROLE_ADMIN")) {
+      LOGGER.info("Hi ".concat(auth.getName()).concat(", you have access to this resource !!!"));
+    }
+    else {
+      LOGGER.info("Hi ".concat(auth.getName()).concat(", you do NOT have access to this resource !!!"));
     }
     
     Pageable pageRequest = PageRequest.of(page, Constants.RESULTS_PER_PAGE);
@@ -241,5 +253,40 @@ public class ClientControllerImpl implements ClientController {
     return responseEntity;
   }
   
+  
+  private boolean hasRole(String role) {
+    SecurityContext context = SecurityContextHolder.getContext();
+    if (context == null) {
+      return false;
+    }
+    Authentication auth = context.getAuthentication();
+    if (auth == null) {
+      return false;
+    }
+    
+
+
+    // Any class 'Role' or representing a 'Role' has to implement the 'GrantedAuthority' interface
+    // A collection of any class that inherits from GrantedAuthority
+    Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+    
+    /*
+     * 
+     
+    for (GrantedAuthority authority : authorities) {
+      if (role.equals(authority.getAuthority())) {
+        LOGGER.info("Hi user ".concat(auth.getName()).concat(", you role is: ").concat(authority.getAuthority()));
+        return true;
+      }
+    }
+    return false;
+    
+    *
+    */
+    
+    // Equivalent way to the previous one using for: Using the 'SimpleGrantedAuthority' class that implements the 'GrantedAuthority' interface
+    return authorities.contains(new SimpleGrantedAuthority(role));
+    
+  }
   
 }
