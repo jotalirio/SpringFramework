@@ -16,6 +16,7 @@ import com.example.springboot.app.auth.handler.LoginSuccessHandler;
 @Configuration
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
   
+  // MySQL queries
   private static final String QUERY_TO_FIND_USER_BY_USERNAME = "SELECT username, password, enabled FROM users WHERE username=?";
   private static final String QUERY_TO_FIND_USER_AUTHORITIES_BY_USERNAME = "SELECT u.username, a.authority FROM authorities a INNER JOIN users u ON (a.user_id=u.id) WHERE u.username=?";
 
