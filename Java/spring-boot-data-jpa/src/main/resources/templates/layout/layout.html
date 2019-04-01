@@ -35,10 +35,26 @@
 						</div>
 					</li>
 				</ul>
+				
+				<!-- Horizontal menu -->
 				<ul class="navbar-nav navbar-right mx-4">
 					<li class="nav-item mx-1"><a class="btn btn-outline-success" th:href="@{/locale(lang=en_EN)}">EN</a></li>
 					<li class="nav-item mx-1"><a class="btn btn-outline-success" th:href="@{/locale(lang=es_ES)}">ES</a></li>
 					<li class="nav-item mx-1"><a class="btn btn-outline-success" th:href="@{/locale(lang=de_DE)}">DE</a></li>
+				</ul>				
+
+				<!-- Dropdown menu -->
+				<ul class="navbar-nav navbar-right mx-2">
+					<li class="nav-item dropdown show">
+						<a class="btn btn-outline-primary dropdown-toggle" href="#" role="button" id="dropdownLanguage" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						   <span th:text="#{text.locale.language}"></span>
+						</a>
+						<div class="dropdown-menu" aria-labelledby="dropdownLanguage">
+							<a class="dropdown-item" th:href="@{/locale(lang=en_EN)}" th:text="#{text.locale.language.en}">EN</a>
+							<a class="dropdown-item" th:href="@{/locale(lang=es_ES)}" th:text="#{text.locale.language.es}">ES</a>
+							<a class="dropdown-item" th:href="@{/locale(lang=de_DE)}" th:text="#{text.locale.language.de}">DE</a>
+						</div>
+					</li>
 				</ul>
 			</div>
 		</nav>
