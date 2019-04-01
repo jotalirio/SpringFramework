@@ -10,8 +10,13 @@ import org.springframework.security.core.userdetails.User.UserBuilder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.example.springboot.app.auth.handler.LoginSuccessHandler;
+
 @Configuration
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
+  
+  @Autowired
+  private LoginSuccessHandler successHandler;
   
   // Method for the HTTP Authorisation (routes) in order to give security to all our sections inside the Web site
   @Override
@@ -27,7 +32,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                             .antMatchers("/products/**").hasAnyRole("ADMIN")
                             .anyRequest().authenticated()
                             .and()
-                              .formLogin().loginPage("/login") // Configure the login page by setting up the '/login/ path from LoginController
+                              .formLogin()
+                                .successHandler(this.successHandler) // We handle the login success event before to show the View. We are showing a login success message
+                                .loginPage("/login") // Configure the login page by setting up the '/login/ path from LoginController
                               .permitAll() // Log in page allowed to all users 
                             .and()
                               .logout().permitAll() // Log out page allowed to all users 
