@@ -16,7 +16,7 @@
 					<a class="btn btn-secondary btn-xs" th:href="@{/details/} + ${invoice.client.id}" th:text="'&laquo; Back'"></a>
 				</h4>
 				<br>
-				<form th:action="@{/invoice/create}" th:object="${invoice}" method="post" enctype="multipart/form-data">
+				<form th:action="@{/invoice/create}" th:object="${invoice}" method="post">
 					<div class="form-group row">
 						<label for="client" class="col-sm-2 col-form-label">Client</label>
 						<div class="col-sm-6">

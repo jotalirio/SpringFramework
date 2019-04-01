@@ -35,3 +35,13 @@
 #invoice-details-observations {
 	margin-top: 100px;
 }
+
+.card-login {
+	padding-left: 0px; 
+	padding-right: 0px; 
+	margin: 0 auto;
+}
+
+.card-login .card-body {
+	margin: 0 auto;
+}

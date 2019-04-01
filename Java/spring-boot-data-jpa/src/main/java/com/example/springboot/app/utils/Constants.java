@@ -21,6 +21,7 @@ public interface Constants {
   public static final String ATTRIBUTE_FLASH_ERROR_KEY = "error";
   public static final String ATTRIBUTE_FLASH_WARNING_KEY = "warning";
   public static final String ATTRIBUTE_FLASH_INFO_KEY = "info";
+  public static final String VIEW_LOGIN = "login";
   public static final String VIEW_LIST = "list";  
   public static final String VIEW_CREATE = "create"; 
   public static final String VIEW_DETAILS = "details"; 
