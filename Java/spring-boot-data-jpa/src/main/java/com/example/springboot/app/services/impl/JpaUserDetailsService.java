@@ -32,17 +32,19 @@ public class JpaUserDetailsService implements UserDetailsService {
     // We get the user
     com.example.springboot.app.models.entity.User user = (com.example.springboot.app.models.entity.User) this.userDao.findByUsername(username);   
     if (user == null) {
-      LOGGER.error("ERROR login: the user does not exist !!!");
-      throw new UsernameNotFoundException("ERROR login: the user does not exist !!!");
+      LOGGER.error("ERROR login: the user '" + username + "' does not exist !!!");
+      throw new UsernameNotFoundException("ERROR login: the user '" + username + "' does not exist !!!");
     }
     // We get the User's authorities (roles)
+    LOGGER.info("User's roles: ");
     List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
     for(Role role : user.getRoles()) {
+      LOGGER.info("Role: ".concat(role.getAuthority()));
       authorities.add(new SimpleGrantedAuthority(role.getAuthority()));
     }
     if (authorities.isEmpty()) {
-      LOGGER.error("ERROR login: the user has not assigned roles !!!");
-      throw new UsernameNotFoundException("ERROR login: the user has not assigned roles !!!!");
+      LOGGER.error("ERROR login: the user '" + username + "' has not assigned roles !!!");
+      throw new UsernameNotFoundException("ERROR login: the user '" + username + "' has not assigned roles !!!");
     }
     return new User(user.getUsername(), user.getPassword(), user.getEnabled(), true, true, true, authorities);
   }

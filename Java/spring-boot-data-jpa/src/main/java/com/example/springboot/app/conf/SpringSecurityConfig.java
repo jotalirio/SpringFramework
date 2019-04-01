@@ -1,7 +1,5 @@
 package com.example.springboot.app.conf;
 
-import javax.sql.DataSource;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -11,26 +9,34 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.example.springboot.app.auth.handler.LoginSuccessHandler;
+import com.example.springboot.app.services.impl.JpaUserDetailsService;
 
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 @Configuration
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
   
   // MySQL queries
-  private static final String QUERY_TO_FIND_USER_BY_USERNAME = "SELECT username, password, enabled FROM users WHERE username=?";
-  private static final String QUERY_TO_FIND_USER_AUTHORITIES_BY_USERNAME = "SELECT u.username, a.authority FROM authorities a INNER JOIN users u ON (a.user_id=u.id) WHERE u.username=?";
+//  private static final String QUERY_TO_FIND_USER_BY_USERNAME = "SELECT username, password, enabled FROM users WHERE username=?";
+//  private static final String QUERY_TO_FIND_USER_AUTHORITIES_BY_USERNAME = "SELECT u.username, a.authority FROM authorities a INNER JOIN users u ON (a.user_id=u.id) WHERE u.username=?";
 
   
   @Autowired
   private LoginSuccessHandler successHandler;
   
+  // Using JDBC authentication
   // Injecting the Datasource to access to our 'users' and 'authorities' tables for JDBC authentication purpose
-  @Autowired
-  private DataSource dataSource;
+//  @Autowired
+//  private DataSource dataSource;
   
+  //Using JDBC authentication
   // Injecting the BCryptPasswordEncoder registered Bean in 'MvcConfig.java' class
   @Autowired
   private BCryptPasswordEncoder passwordEncoder;
+  
+  @Autowired
+  //Using JPA authentication
+  private JpaUserDetailsService userDetailsService;
+  
   
   // Method for the HTTP Authorisation (routes) in order to give security to all our sections inside the Web site
   @Override
@@ -77,12 +83,26 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
      *    
      */
     
+    
+    /*
+     *
+
     // Using a real database 'users' and 'authorities' with JDBC authentication
     // Adding and configuring the JDBC authentication to the AuthenticationManagerBuilder. 
-    build.jdbcAuthentication().dataSource(dataSource)
-                              .passwordEncoder(passwordEncoder)
+    build.jdbcAuthentication().dataSource(this.dataSource)
+                              .passwordEncoder(this.passwordEncoder)
                               .usersByUsernameQuery(QUERY_TO_FIND_USER_BY_USERNAME)
                               .authoritiesByUsernameQuery(QUERY_TO_FIND_USER_AUTHORITIES_BY_USERNAME);
+
+     * 
+     */
+    
+      
+     // Using JPA authentication
+     // Here the QUERY_TO_FIND_USER_BY_USERNAME is implemented inside the 'UserDao' interface
+     build.userDetailsService(this.userDetailsService)
+          .passwordEncoder(this.passwordEncoder);
+
 
   }
   
