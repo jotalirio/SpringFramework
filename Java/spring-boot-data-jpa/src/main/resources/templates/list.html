@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="layout/layout :: head"></head>
 <body>
 	<header th:replace="layout/layout :: header"></header>
@@ -8,7 +8,7 @@
 			<div class="card-header bg-secondary text-white" th:text="${title}"></div>
 			<div class="card-body">
 				<h4 class="card-title">
-					<a class="btn btn-secondary btn-xs" th:href="@{/create}" th:text="'New Client'"></a>
+					<a sec:authorize="hasRole('ROLE_ADMIN')" class="btn btn-secondary btn-xs" th:href="@{/create}" th:text="'New Client'"></a>
 				</h4>
 				<table class="table table-striped table-hover text-center">
 					<thead class="thead-dark">
@@ -18,7 +18,7 @@
 							<th>Surname</th>
 							<th>Email</th>
 							<th>Creation Date</th>
-							<th>Actions</th>
+							<th sec:authorize="hasRole('ROLE_ADMIN')">Actions</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -30,7 +30,7 @@
 							<td class="align-middle" th:text="${client.surname}"></td>
 							<td class="align-middle" th:text="${client.email}"></td>
 							<td class="align-middle" th:text="${client.creationDate}"></td>
-							<td class="align-middle">
+							<td sec:authorize="hasRole('ROLE_ADMIN')" class="align-middle">
 								<a class="btn btn-success btn-xs" th:href="@{/edit/} + ${client.id}" th:text="'Edit'"></a> 
 								<a class="btn btn-danger btn-xs" th:href="@{/delete/} + ${client.id}" th:text="'Delete'" 
 								   onclick="return confirm('Do you want to delete this client?');"></a>
