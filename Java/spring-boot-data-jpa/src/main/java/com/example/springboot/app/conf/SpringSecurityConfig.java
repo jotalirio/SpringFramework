@@ -3,6 +3,7 @@ package com.example.springboot.app.conf;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.User;
@@ -12,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.springboot.app.auth.handler.LoginSuccessHandler;
 
+@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 @Configuration
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
   
@@ -23,13 +25,13 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
   protected void configure(HttpSecurity http) throws Exception {
     
     http.authorizeRequests().antMatchers("/", "/css/**", "/js/**", "/images/**", "/list").permitAll()  // Public resources can be accessed by all users
-                            .antMatchers("/details/**").hasAnyRole("USER")                             // Defining rules by role
-                            .antMatchers("/uploads/**").hasAnyRole("USER")
-                            .antMatchers("/create/**").hasAnyRole("ADMIN")
-                            .antMatchers("/edit/**").hasAnyRole("ADMIN")
-                            .antMatchers("/delete/**").hasAnyRole("ADMIN")
-                            .antMatchers("/invoice/**").hasAnyRole("ADMIN")
-                            .antMatchers("/products/**").hasAnyRole("ADMIN")
+                            /* .antMatchers("/details/**").hasAnyRole("USER") */                            // Defining rules by role
+                            /* .antMatchers("/uploads/**").hasAnyRole("USER") */
+                            /* .antMatchers("/create/**").hasAnyRole("ADMIN") */
+                            /* .antMatchers("/edit/**").hasAnyRole("ADMIN") */
+                            /* .antMatchers("/delete/**").hasAnyRole("ADMIN") */
+                            /* .antMatchers("/invoice/**").hasAnyRole("ADMIN") */
+                            /* .antMatchers("/products/**").hasAnyRole("ADMIN") */
                             .anyRequest().authenticated()
                             .and()
                               .formLogin()

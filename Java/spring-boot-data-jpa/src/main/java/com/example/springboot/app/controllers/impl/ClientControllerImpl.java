@@ -16,6 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -119,6 +121,7 @@ public class ClientControllerImpl implements ClientController {
     return Constants.VIEW_LIST;
   }
   
+  @Secured("ROLE_ADMIN")
   @RequestMapping(value = "/create", method = RequestMethod.GET)
   @Override
   public String create(Map<String, Object> model) {
@@ -128,6 +131,7 @@ public class ClientControllerImpl implements ClientController {
     return Constants.VIEW_CREATE;
   }
 
+  @Secured("ROLE_ADMIN")
   @RequestMapping(value = "/create", method = RequestMethod.POST)
   @Override
   public String save(@Valid Client client, BindingResult result, Model model, @RequestParam("file") MultipartFile photo, RedirectAttributes flash, SessionStatus sessionStatus) {
@@ -170,6 +174,9 @@ public class ClientControllerImpl implements ClientController {
     return "redirect:/" + Constants.VIEW_LIST;
   }  
   
+//  @Secured("ROLE_ADMIN")
+//  @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')") // We can use this annotation instead '@Secured', they both are equivalent
+  @PreAuthorize("hasAnyRole('ROLE_ADMIN')") // We can use this annotation instead '@Secured', they both are equivalent
   @RequestMapping(value = "/edit/{id}", method = RequestMethod.GET)
   @Override
   public String edit(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
@@ -198,6 +205,7 @@ public class ClientControllerImpl implements ClientController {
     return Constants.VIEW_CREATE;
   }
   
+  @Secured("ROLE_ADMIN")
   @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
   @Override
   public String delete(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
@@ -233,6 +241,8 @@ public class ClientControllerImpl implements ClientController {
     return "redirect:/" + Constants.VIEW_LIST;
   }
   
+//  @Secured("ROLE_USER")
+  @PreAuthorize("hasRole('ROLE_USER')") // We can use this annotation instead '@Secured', they both are equivalent
   @GetMapping(value="/details/{id}")
   @Override
   public String details(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
@@ -261,6 +271,8 @@ public class ClientControllerImpl implements ClientController {
   }
   
   // Using .+ Spring avoid to split the filename deleting the image extension
+//  @Secured({"ROLE_USER", "ROLE_ADMIN"})
+  @Secured({"ROLE_USER"})
   @GetMapping(value = "/uploads/images/{filename:.+}")
   public ResponseEntity<Resource> getPhoto(@PathVariable(value = "filename") String fileName) {
     Resource resource = this.uploadFileService.loadImage(fileName);
