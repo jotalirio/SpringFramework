@@ -1,10 +1,16 @@
 package com.example.springboot.app.conf;
 
+import java.util.Locale;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 @Configuration
 public class MvcConfig implements WebMvcConfigurer {
@@ -50,4 +56,35 @@ public class MvcConfig implements WebMvcConfigurer {
   public BCryptPasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder();
   }
+  
+    
+  // Indicates where is stored our Locale: in this case is in the User's Session
+  @Bean
+  public LocaleResolver localeResolver() {
+    SessionLocaleResolver localeResolver = new SessionLocaleResolver();
+    localeResolver.setDefaultLocale(new Locale("en", "GB"));
+    return localeResolver();
+  }
+  
+  
+  // Interceptor. LocaleChange interceptor responsible for detect locale changes and then select the proper language. 
+  // An interceptor is executed in each http request and in this case executes a handler method inside the Controller
+  // This interceptor will be excuted each time we makes a HTTP Request with the paramater lang: For instance, lang=es_ES
+  @Bean
+  public LocaleChangeInterceptor localeChangeInterceptor() {
+    LocaleChangeInterceptor localeChangeInterceptor = new LocaleChangeInterceptor();
+    localeChangeInterceptor.setParamName("lang");
+    return localeChangeInterceptor;
+  }
+
+  // Registering the previous interceptor
+  @Override
+  public void addInterceptors(InterceptorRegistry registry) {
+    registry.addInterceptor(this.localeChangeInterceptor());
+  }
+  
+  
+
+  
+  
 }
