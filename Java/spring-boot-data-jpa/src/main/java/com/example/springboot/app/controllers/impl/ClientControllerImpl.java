@@ -3,6 +3,7 @@ package com.example.springboot.app.controllers.impl;
 import java.util.Collection;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -20,6 +21,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -67,7 +69,8 @@ public class ClientControllerImpl implements ClientController {
   @RequestMapping(value = {"/", "/list"}, method = RequestMethod.GET)
   @SuppressWarnings({ "unchecked", "rawtypes" })
   @Override
-  public String listClients(@RequestParam(name = "page", defaultValue = Constants.FIRST_PAGE) int page, Model model, Authentication authentication) {
+  public String listClients(@RequestParam(name = "page", defaultValue = Constants.FIRST_PAGE) int page, Model model, 
+                            Authentication authentication, HttpServletRequest request) {
     
     if (authentication != null) {
       LOGGER.info("Hi authenticated user, your username is: ".concat(authentication.getName()));
@@ -81,11 +84,31 @@ public class ClientControllerImpl implements ClientController {
     
     // We checks the User's role
     if (this.hasRole("ROLE_ADMIN")) {
-      LOGGER.info("Hi ".concat(auth.getName()).concat(", you have access to this resource !!!"));
+      LOGGER.info("Using the custom 'hasRole()' method -> Hi ".concat(auth.getName()).concat(", you have access to this resource !!!"));
     }
     else {
-      LOGGER.info("Hi ".concat(auth.getName()).concat(", you do NOT have access to this resource !!!"));
+      LOGGER.info("Using the custom 'hasRole()' method -> Hi ".concat(auth.getName()).concat(", you do NOT have access to this resource !!!"));
     }
+    
+    // Getting the object that wraps the HttpServletRequest object in order to check if the user is authorised to access (checking the role)
+//    SecurityContextHolderAwareRequestWrapper securityContext = new SecurityContextHolderAwareRequestWrapper(request, "ROLE_");
+//    if (securityContext.isUserInRole("ADMIN")) {
+    SecurityContextHolderAwareRequestWrapper securityContext = new SecurityContextHolderAwareRequestWrapper(request, "");
+    if (securityContext.isUserInRole("ROLE_ADMIN")) {
+
+      LOGGER.info("Using the 'SecurityContextHolderAwareRequestWrapper' -> Hi ".concat(auth.getName()).concat(", you have access to this resource !!!"));
+    }
+    else {
+      LOGGER.info("Using the 'SecurityContextHolderAwareRequestWrapper' -> Hi ".concat(auth.getName()).concat(", you do NOT have access to this resource !!!"));
+    }
+    // Checking the role using the 'HttpServletRequest' directly
+    if (request.isUserInRole("ROLE_ADMIN")) {
+      LOGGER.info("Using the 'HttpServletRequest' -> Hi ".concat(auth.getName()).concat(", you have access to this resource !!!"));
+    }
+    else {
+      LOGGER.info("Using the 'HttpServletRequest' -> Hi ".concat(auth.getName()).concat(", you do NOT have access to this resource !!!"));
+    }
+
     
     Pageable pageRequest = PageRequest.of(page, Constants.RESULTS_PER_PAGE);
     Page<Client> clients = this.clientService.getClients(pageRequest);
@@ -269,7 +292,9 @@ public class ClientControllerImpl implements ClientController {
     // Any class 'Role' or representing a 'Role' has to implement the 'GrantedAuthority' interface
     // A collection of any class that inherits from GrantedAuthority
     Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
-    
+    if (authorities ==  null) {
+      return false;
+    }
     /*
      * 
      
