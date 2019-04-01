@@ -42,7 +42,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     
-    http.authorizeRequests().antMatchers("/", "/css/**", "/js/**", "/images/**", "/list").permitAll()  // Public resources can be accessed by all users
+    http.authorizeRequests().antMatchers("/", "/css/**", "/js/**", "/images/**", "/list", "/locale").permitAll()  // Public resources can be accessed by all users
                             /* .antMatchers("/details/**").hasAnyRole("USER") */                            // Defining rules by role
                             /* .antMatchers("/uploads/**").hasAnyRole("USER") */
                             /* .antMatchers("/create/**").hasAnyRole("ADMIN") */
