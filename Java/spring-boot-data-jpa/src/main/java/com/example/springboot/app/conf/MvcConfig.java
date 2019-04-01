@@ -1,6 +1,8 @@
 package com.example.springboot.app.conf;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -36,5 +38,16 @@ public class MvcConfig implements WebMvcConfigurer {
   // Adding a View controller implementing the 'addViewControllers' method. We have to use this name as mandatory.
   public void addViewControllers(ViewControllerRegistry registry) {
     registry.addViewController("/error_403").setViewName("error_403");
+  }
+  
+  // Using the 'Bcrypt' encoder to encrypt the password. This is the best recommended encoder to use with Spring Security
+  // We need to register the Bean in order to use @Autowired to inject it. For that, the next method is returning an instance of Bcrypt
+  // and we have to annotate it with @Bean. In this way we are registering this bean inside the Spring's context
+  // REMINDER: 
+  //    - We register new class as a Bean using the @Component such as we did with 'LoginSuccessHandler.java'
+  //    - Now, we are instantiating a new BCryptPasswordEncoder instance and register it as a Bean
+  @Bean
+  public BCryptPasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
   }
 }
