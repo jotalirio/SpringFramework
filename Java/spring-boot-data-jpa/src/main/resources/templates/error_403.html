@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="layout/layout :: head"></head>
+<body>
+	<header th:replace="layout/layout :: header"></header>
+	<div class="container py-4">
+		<div class="card bg-danger text-white">
+			<div class="card-header">ERROR: Access denied !!!</div>
+			<div class="card-body">
+			<!-- We can use 'httpServletRequest.remoteUser' or 'authentication.name' to get the User's name -->
+<!-- 				<h5 class="card-title">Sorry, <span th:text="${#httpServletRequest.remoteUser}"></span>, you do not have permission to access this resource.</h5> -->
+				<h5 class="card-title">Sorry, <span th:text="${#authentication.name}"></span>, you do not have permission to access this resource.</h5>
+				<a class="btn btn-outline-light my-3" role="button" th:href="@{/list}">Go Back</a>
+			</div>
+		</div>
+	</div>
+	<footer th:replace="layout/layout :: footer"></footer>
+</body>
+</html>

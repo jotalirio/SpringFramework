@@ -30,7 +30,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                               .formLogin().loginPage("/login") // Configure the login page by setting up the '/login/ path from LoginController
                               .permitAll() // Log in page allowed to all users 
                             .and()
-                            .logout().permitAll(); // Log out page allowed to all users 
+                              .logout().permitAll() // Log out page allowed to all users 
+                            .and()
+                              .exceptionHandling().accessDeniedPage("/error_403");
   }
 
   
