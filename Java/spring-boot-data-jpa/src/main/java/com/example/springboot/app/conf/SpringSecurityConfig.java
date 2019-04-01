@@ -1,15 +1,14 @@
 package com.example.springboot.app.conf;
 
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.User.UserBuilder;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.example.springboot.app.auth.handler.LoginSuccessHandler;
 
@@ -17,8 +16,20 @@ import com.example.springboot.app.auth.handler.LoginSuccessHandler;
 @Configuration
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
   
+  private static final String QUERY_TO_FIND_USER_BY_USERNAME = "SELECT username, password, enabled FROM users WHERE username=?";
+  private static final String QUERY_TO_FIND_USER_AUTHORITIES_BY_USERNAME = "SELECT u.username, a.authority FROM authorities a INNER JOIN users u ON (a.user_id=u.id) WHERE u.username=?";
+
+  
   @Autowired
   private LoginSuccessHandler successHandler;
+  
+  // Injecting the Datasource to access to our 'users' and 'authorities' tables for JDBC authentication purpose
+  @Autowired
+  private DataSource dataSource;
+  
+  // Injecting the BCryptPasswordEncoder registered Bean in 'MvcConfig.java' class
+  @Autowired
+  private BCryptPasswordEncoder passwordEncoder;
   
   // Method for the HTTP Authorisation (routes) in order to give security to all our sections inside the Web site
   @Override
@@ -49,6 +60,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
   @Autowired
   public void configurerGlobal(AuthenticationManagerBuilder build) throws Exception {
     
+    /*
+     *
+     
+    // For a memory database
     PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
     UserBuilder users = User.builder().passwordEncoder(encoder::encode);
     
@@ -57,6 +72,17 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     build.inMemoryAuthentication()
          .withUser(users.username("admin").password("12345").roles("ADMIN", "USER")) // Creating our users in memory
          .withUser(users.username("lirio").password("12345").roles("USER"));
+     
+     *    
+     */
+    
+    // Using a real database 'users' and 'authorities' with JDBC authentication
+    // Adding and configuring the JDBC authentication to the AuthenticationManagerBuilder. 
+    build.jdbcAuthentication().dataSource(dataSource)
+                              .passwordEncoder(passwordEncoder)
+                              .usersByUsernameQuery(QUERY_TO_FIND_USER_BY_USERNAME)
+                              .authoritiesByUsernameQuery(QUERY_TO_FIND_USER_AUTHORITIES_BY_USERNAME);
+
   }
   
 }
