@@ -28,8 +28,12 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     // but this way to implement it is equivalent
     SessionFlashMapManager flashMapManager = new SessionFlashMapManager();
     FlashMap flashMap = new FlashMap();
-    flashMap.put(Constants.ATTRIBUTE_FLASH_SUCCESS_KEY, "You have logged in successfully !!!");
+    flashMap.put(Constants.ATTRIBUTE_FLASH_SUCCESS_KEY, "Hi " + authentication.getName() + ", you have logged in successfully !!!");
     flashMapManager.saveOutputFlashMap(flashMap, request, response);
+    if (authentication != null) {
+      // This logger is inherited by 'SimpleUrlAuthenticationSuccessHandler' from the abstract class 'AbstractAuthenticationTargetUrlRequestHandler'
+      logger.info("The user " + authentication.getName() + " has logged in successfully !!!");
+    }
     super.onAuthenticationSuccess(request, response, authentication);
   }
   

@@ -14,6 +14,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -40,7 +42,7 @@ import com.example.springboot.app.utils.paginator.PageRender;
 @SessionAttributes(Constants.ATTRIBUTE_CLIENT_KEY) 
 public class ClientControllerImpl implements ClientController {
 
-  private final Logger LOGGER = LoggerFactory.getLogger(ClientControllerImpl.class);
+  private final Logger LOGGER = LoggerFactory.getLogger(this.getClass());
   
   @Autowired
   private ClientService clientService;
@@ -61,7 +63,18 @@ public class ClientControllerImpl implements ClientController {
   @RequestMapping(value = {"/", "/list"}, method = RequestMethod.GET)
   @SuppressWarnings({ "unchecked", "rawtypes" })
   @Override
-  public String listClients(@RequestParam(name = "page", defaultValue = Constants.FIRST_PAGE) int page, Model model) {
+  public String listClients(@RequestParam(name = "page", defaultValue = Constants.FIRST_PAGE) int page, Model model, Authentication authentication) {
+    
+    if (authentication != null) {
+      LOGGER.info("Hi authenticated user, your username is: ".concat(authentication.getName()));
+    }
+    
+    // We can retrieve the Authentication object in a static way instead passing it to the method by parameter
+    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    if (auth != null) {
+      LOGGER.info("Retrieving the Authentication object in a static way -> Authenticated user, username: ".concat(auth.getName()));
+    }
+    
     Pageable pageRequest = PageRequest.of(page, Constants.RESULTS_PER_PAGE);
     Page<Client> clients = this.clientService.getClients(pageRequest);
     PageRender<Client> pageRender = new PageRender("/list", clients);
