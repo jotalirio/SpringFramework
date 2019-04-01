@@ -14,11 +14,11 @@
 					<thead class="thead-dark">
 						<tr>
 							<th sec:authorize="hasRole('ROLE_USER')">Id</th>
-							<th>Name</th>
-							<th>Surname</th>
-							<th>Email</th>
-							<th>Creation Date</th>
-							<th sec:authorize="hasRole('ROLE_ADMIN')">Actions</th>
+							<th th:text="#{text.client.name}">Name</th>
+							<th th:text="#{text.client.surname}">Surname</th>
+							<th th:text="#{text.client.email}">Email</th>
+							<th th:text="#{text.client.creationDate}">Creation Date</th>
+							<th th:text="#{text.client.actions}" sec:authorize="hasRole('ROLE_ADMIN')">Actions</th>
 						</tr>
 					</thead>
 					<tbody>
