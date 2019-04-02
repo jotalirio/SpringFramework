@@ -8,10 +8,12 @@
 			<div class="card-header" th:text="${title}"></div>
 			<div class="card-body">
 				<h4 class="card-title">
-					<a class="btn btn-light btn-xs" th:href="@{/details/} + ${invoice.client.id}" th:text="'&laquo; Back'"></a>
+					<a class="btn btn-light btn-xs" th:href="@{'/details/' + ${invoice.client.id}}" th:text="'&laquo; Back'"></a>
+					<a class="btn btn-danger btn-xs float-right mx-2" th:href="@{'/invoice/details/' + ${invoice.id}(format=pdf)}" th:text="'PDF'"></a>
+					<a class="btn btn-success btn-xs float-right" th:href="@{'/invoice/details/' + ${invoice.id}(format=xlsx)}" th:text="'XLS'"></a>
 				</h4>
 				<ul class="list-group my-4">
-					<li class="list-group-item list-group-item-primary" th:text="'Client information'"></li>
+					<li class="list-group-item list-group-item-primary" th:text="'Customer information'"></li>
 					<li class="list-group-item" th:text="${invoice.client}"></li>
 					<li class="list-group-item" th:text="${invoice.client.email}"></li>
 				</ul>
@@ -19,7 +21,7 @@
 					<li class="list-group-item list-group-item-success" th:text="'Invoice data'"></li>
 					<li class="list-group-item" th:text="'Reference: ' + ${invoice.id}"></li>
 					<li class="list-group-item" th:text="'Description: ' + ${invoice.description}"></li>
-					<li class="list-group-item" th:text="'Date: ' + ${invoice.creationDate}"></li>
+					<li class="list-group-item" th:text="'Creation date: ' + ${invoice.creationDate}"></li>
 				</ul>
 				<div class="alert alert-info my-4" th:if="${#lists.isEmpty(invoice.invoiceLines)}" th:text="'There are no lines for the invoce: ' + ${invoice.description}"></div>
 				<table th:if="${not #lists.isEmpty(invoice.invoiceLines)}" class="table table-bordered table-striped table-hover text-center my-4">

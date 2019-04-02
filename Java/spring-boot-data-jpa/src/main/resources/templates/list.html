@@ -9,16 +9,19 @@
 			<div class="card-body">
 				<h4 class="card-title">
 					<a sec:authorize="hasRole('ROLE_ADMIN')" class="btn btn-secondary btn-xs" th:href="@{/create}" th:text="'New Client'"></a>
+					<a class="btn btn-success btn-xs float-right mx-2" th:href="@{'/list'(format=csv)}" th:text="'CSV'"></a>
+					<a class="btn btn-outline-success btn-xs float-right mx-2" th:href="@{'/list'(format=xml)}" th:text="'XML'"></a>
+					<a class="btn btn-outline-warning btn-xs float-right" th:href="@{'/list'(format=json)}" th:text="'JSON'"></a>
 				</h4>
-				<table class="table table-striped table-hover text-center">
+				<table id="clients-table" class="table table-striped table-hover text-center">
 					<thead class="thead-dark">
 						<tr>
 							<th sec:authorize="hasRole('ROLE_USER')">Id</th>
-							<th>Name</th>
-							<th>Surname</th>
-							<th>Email</th>
-							<th>Creation Date</th>
-							<th sec:authorize="hasRole('ROLE_ADMIN')">Actions</th>
+							<th th:text="#{text.client.name}">Name</th>
+							<th th:text="#{text.client.surname}">Surname</th>
+							<th th:text="#{text.client.email}">Email</th>
+							<th th:text="#{text.client.creationDate}">Creation Date</th>
+							<th th:text="#{text.client.actions}" sec:authorize="hasRole('ROLE_ADMIN')">Actions</th>
 						</tr>
 					</thead>
 					<tbody>

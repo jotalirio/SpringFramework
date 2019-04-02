@@ -45,3 +45,7 @@
 .card-login .card-body {
 	margin: 0 auto;
 }
+
+#clients-table {
+	margin-top: 70px;
+}

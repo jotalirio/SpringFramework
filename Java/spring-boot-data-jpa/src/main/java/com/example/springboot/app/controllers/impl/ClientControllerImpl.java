@@ -1,6 +1,7 @@
 package com.example.springboot.app.controllers.impl;
 
 import java.util.Collection;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,6 +10,7 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,6 +34,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,6 +46,7 @@ import com.example.springboot.app.services.ClientService;
 import com.example.springboot.app.services.UploadFileService;
 import com.example.springboot.app.utils.Constants;
 import com.example.springboot.app.utils.paginator.PageRender;
+import com.example.springboot.app.view.xml.ClientList;
 
 @Controller
 // We are storing in the Session the client entity when we create new Client or update an existing one
@@ -58,6 +62,18 @@ public class ClientControllerImpl implements ClientController {
   @Autowired
   private UploadFileService uploadFileService;
   
+  // We use this object to get the current language
+  @Autowired
+  private MessageSource messageSource;
+  
+  
+  // Handler method that returns directly a JSON
+  @GetMapping(value = "/list-rest")
+  @Override
+  public @ResponseBody ClientList listRest() {
+    return new ClientList(this.clientService.getClients());
+  }
+  
     // Use this method with IClientDao or IClientDaoCrudRepository
 //  @RequestMapping(value = "/list", method = RequestMethod.GET)
 //  @Override
@@ -72,7 +88,9 @@ public class ClientControllerImpl implements ClientController {
   @SuppressWarnings({ "unchecked", "rawtypes" })
   @Override
   public String listClients(@RequestParam(name = "page", defaultValue = Constants.FIRST_PAGE) int page, Model model, 
-                            Authentication authentication, HttpServletRequest request) {
+                            Authentication authentication, 
+                            HttpServletRequest request,
+                            Locale locale) { // Spring is injecting the locale to the method automatically
     
     if (authentication != null) {
       LOGGER.info("Hi authenticated user, your username is: ".concat(authentication.getName()));
@@ -115,7 +133,8 @@ public class ClientControllerImpl implements ClientController {
     Pageable pageRequest = PageRequest.of(page, Constants.RESULTS_PER_PAGE);
     Page<Client> clients = this.clientService.getClients(pageRequest);
     PageRender<Client> pageRender = new PageRender("/list", clients);
-    model.addAttribute(Constants.ATTRIBUTE_TITLE_KEY, Constants.ATTRIBUTE_TITLE_VALUE_LIST_CLIENTS);
+//    model.addAttribute(Constants.ATTRIBUTE_TITLE_KEY, Constants.ATTRIBUTE_TITLE_VALUE_LIST_CLIENTS);
+    model.addAttribute(Constants.ATTRIBUTE_TITLE_KEY, messageSource.getMessage("text.client.list.title", null, locale));
     model.addAttribute(Constants.ATTRIBUTE_CLIENTS_KEY, clients);
     model.addAttribute(Constants.ATTRIBUTE_PAGE_RENDER_KEY, pageRender);
     return Constants.VIEW_LIST;

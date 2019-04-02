@@ -138,6 +138,8 @@ public class InvoiceControllerImpl implements InvoiceController {
     return "redirect:/list";
   }
 
+  // This method is used to render the details in HTML, PDF, Excel, etc... To know which format has to be rendered, 
+  // this method will check the 'format' parameter from the URL. If the 'format' parameter is missed then by default the content is rendered in HTML
   @GetMapping("/details/{id}")
   @Override
   public String details(@PathVariable(value = "id") Long id, Model model, RedirectAttributes flash) {
