@@ -43,8 +43,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
   protected void configure(HttpSecurity http) throws Exception {
     
     // Changing the '/list' to '/list**' we are allowing the '/list-rest' URL path
-    http.authorizeRequests().antMatchers("/", "/css/**", "/js/**", "/images/**", "/list**", "/locale").permitAll()  // Public resources can be accessed by all users
-                            /* .antMatchers("/details/**").hasAnyRole("USER") */                            // Defining rules by role
+    http.authorizeRequests().antMatchers("/", "/css/**", "/js/**", "/images/**", "/list**", "/locale", "/api/clients/**").permitAll()  // Public resources can be accessed by all users
+                            /* .antMatchers("/details/**").hasAnyRole("USER") */  // -->  Defining rules by role
                             /* .antMatchers("/uploads/**").hasAnyRole("USER") */
                             /* .antMatchers("/create/**").hasAnyRole("ADMIN") */
                             /* .antMatchers("/edit/**").hasAnyRole("ADMIN") */
