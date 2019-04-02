@@ -1,12 +1,17 @@
 package com.example.springboot.app.view.pdf;
 
 import java.awt.Color;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.view.document.AbstractPdfView;
 
 import com.example.springboot.app.models.entity.Invoice;
@@ -25,10 +30,27 @@ import com.lowagie.text.pdf.PdfWriter;
 @Component("invoice/details")
 public class InvoicePdfView extends AbstractPdfView {
 
+  // Option 1: Retrieving the current Locale to translate the texts
+  @Autowired
+  private MessageSource messageSource;
+  
+  // Option 1: Retrieving the current Locale to translate the texts
+  @Autowired
+  private LocaleResolver localeResolver;
+  
+  
   @Override
   protected void buildPdfDocument(Map<String, Object> model, Document document, PdfWriter writer,
       HttpServletRequest request, HttpServletResponse response) throws Exception {
 
+    // Option 1: Retrieving the current Locale to translate the texts
+    Locale locale = localeResolver.resolveLocale(request);
+    
+    // Option 2: Using the method 'getMessageSourceAccessor()' from the superclass 'AbstractPdfView'. This method returns a 'MessageSourceAccessor' object
+    // this object resolve the Locale and retrieve the MessageSource object in background so with can use this object to translate as well.
+    MessageSourceAccessor messages = getMessageSourceAccessor();
+    
+    
     // Retrieving the invoice instance passed to the view from the model object
     Invoice invoice = (Invoice) model.get(Constants.ATTRIBUTE_INVOICE_KEY);
     
@@ -37,10 +59,9 @@ public class InvoicePdfView extends AbstractPdfView {
     // 1. Table Customer information -> 1 column and 3 rows
     PdfPTable tableCustomerInfo = new PdfPTable(1);
     tableCustomerInfo.setSpacingAfter(20); // Space after table
-    cell = new PdfPCell(new Phrase("Customer information"));
+    cell = new PdfPCell(new Phrase(messageSource.getMessage("text.invoice.details.data.customer", null, locale)));
     cell.setBackgroundColor(new Color(184, 218, 255)); // RGB format
     cell.setPadding(8F);
-//    tableCustomerInfo.addCell("Customer information");
     tableCustomerInfo.addCell(cell);
     tableCustomerInfo.addCell(invoice.getClient().getName().concat(" ").concat(invoice.getClient().getSurname()));
     tableCustomerInfo.addCell(invoice.getClient().getEmail());
@@ -48,36 +69,27 @@ public class InvoicePdfView extends AbstractPdfView {
     // 2. Table Invoice data -> 1 column and 3 rows
     PdfPTable tableInvoiceData = new PdfPTable(1);
     tableInvoiceData.setSpacingAfter(20);
-    cell = new PdfPCell(new Phrase("Invoice Data"));
+    cell = new PdfPCell(new Phrase(messageSource.getMessage("text.invoice.details.data.invoice", null, locale)));
     cell.setBackgroundColor(new Color(195, 230, 203)); // RGB format
     cell.setPadding(8F);
-//    tableInvoiceData.addCell("Invoice Data");
     tableInvoiceData.addCell(cell);
-    tableInvoiceData.addCell("Reference: " + invoice.getId());
-    tableInvoiceData.addCell("Description: " + invoice.getDescription());
-    tableInvoiceData.addCell("Creation date: " + invoice.getCreationDate());
+    tableInvoiceData.addCell(messages.getMessage("text.invoice.reference").concat(": ") + invoice.getId());
+    tableInvoiceData.addCell(messages.getMessage("text.invoice.description").concat(": ") + invoice.getDescription());
+    tableInvoiceData.addCell(messages.getMessage("text.invoice.date").concat(": ") + invoice.getCreationDate());
     
     // 3. Table Invoice's lines data ->  4 column and YYY rows (Header + as many as invoice's lines)
     PdfPTable tableInvoiceLines = new PdfPTable(4);
     tableInvoiceLines.setWidths(new float[] {3.5F, 1, 1, 1});
-    /*
-
-    tableInvoiceLines.addCell("Product");
-    tableInvoiceLines.addCell("Price");
-    tableInvoiceLines.addCell("Quantity");
-    tableInvoiceLines.addCell("Total");
-    
-    */
-    cell = new PdfPCell(new Phrase("Product"));
+    cell = new PdfPCell(new Phrase(messages.getMessage("text.invoice.line.product")));
     cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
     tableInvoiceLines.addCell(cell);
-    cell = new PdfPCell(new Phrase("Price"));
+    cell = new PdfPCell(new Phrase(messages.getMessage("text.invoice.line.product.price")));
     cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
     tableInvoiceLines.addCell(cell);
-    cell = new PdfPCell(new Phrase("Quantity"));
+    cell = new PdfPCell(new Phrase(messages.getMessage("text.invoice.line.quantity")));
     cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
     tableInvoiceLines.addCell(cell);
-    cell = new PdfPCell(new Phrase("Total"));
+    cell = new PdfPCell(new Phrase(messages.getMessage("text.invoice.line.total")));
     cell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
     tableInvoiceLines.addCell(cell);
     // Invoice's lines
@@ -105,7 +117,7 @@ public class InvoicePdfView extends AbstractPdfView {
     });
     
     // Invoice Total amount
-    cell = new PdfPCell(new Phrase("Total: "));
+    cell = new PdfPCell(new Phrase(messages.getMessage("text.invoice.total").concat(": ")));
     cell.setColspan(3);
     cell.setHorizontalAlignment(PdfPCell.ALIGN_RIGHT);
     cell.setPaddingRight(8F);
