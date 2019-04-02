@@ -27,7 +27,12 @@ import com.lowagie.text.pdf.PdfWriter;
 // This 'details' method will be used to render the details in HTML, PDF, Excel, etc...
 // To know which format has to be rendered, the 'details' method will check the 'format' parameter passed to the URL
 // If the 'format' parameter is missed then by default the content is rendered in HTML
-@Component("invoice/details")
+
+// The view is resolved by BeanName -> ViewResolver 
+
+// Withou the extension '.pdf' works perfectly 
+//@Component("invoice/details")
+@Component("invoice/details.pdf")
 public class InvoicePdfView extends AbstractPdfView {
 
   // Option 1: Retrieving the current Locale to translate the texts
