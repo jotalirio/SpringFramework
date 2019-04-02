@@ -22,6 +22,8 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "Clients")
 public class Client implements Serializable {
@@ -55,6 +57,13 @@ public class Client implements Serializable {
   // Using 'mappedBy' we have a bidirectional mapping between the Client and Invoice classes through the 'invoices' and 'client' attributes
   // so we can fetch the invoices linked to a Client and the Client from a Invoice as well 
   // Automatically the foreign key 'client_id' pointing to 'clients' table is created inside of 'invoices' table
+  
+  // The @JsonIgnore annotation avoid this attribute inside the JSON serialisation
+  // We need to do that because when the invoices are fetched then 
+  // the client is fetched another time and after that the invoices
+  // are fetched another time in this way until infinite... generating
+  // an infinite loop
+  @JsonIgnore
   @OneToMany(mappedBy = "client", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<Invoice> invoices;
 
