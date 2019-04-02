@@ -14,6 +14,7 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.view.document.AbstractXlsxView;
 
@@ -32,6 +33,10 @@ public class InvoiceXlsxView extends AbstractXlsxView {
     // Setting the file name
     response.setHeader("Content-Disposition", "attachment; filename=\"invoice_view.xlsx\"");
     
+    // Translation: Using the method 'getMessageSourceAccessor()' from the superclass 'AbstractPdfView'. This method returns a 'MessageSourceAccessor' object
+    // this object resolve the Locale and retrieve the MessageSource object in background so with can use this object to translate as well.
+    MessageSourceAccessor messages = getMessageSourceAccessor();
+    
     Invoice invoice = (Invoice) model.get(Constants.ATTRIBUTE_INVOICE_KEY);
     
     // Creating our Excel sheet from the Workbook object
@@ -40,7 +45,7 @@ public class InvoiceXlsxView extends AbstractXlsxView {
     // Customer information
     Row row = sheet.createRow(0);  // Row 0
     Cell cell = row.createCell(0); // Column 0
-    cell.setCellValue("Customer information");
+    cell.setCellValue(messages.getMessage("text.invoice.details.data.customer"));
     row = sheet.createRow(1); // Row 1
     cell = row.createCell(0); // Column 0
     cell.setCellValue(invoice.getClient().getName().concat(" ").concat(invoice.getClient().getSurname()));
@@ -49,10 +54,10 @@ public class InvoiceXlsxView extends AbstractXlsxView {
     cell.setCellValue(invoice.getClient().getEmail());
     
     // Invoice data. Short way to do the same
-    sheet.createRow(4).createCell(0).setCellValue("Invoice data");
-    sheet.createRow(5).createCell(0).setCellValue("Reference: " + invoice.getId());
-    sheet.createRow(6).createCell(0).setCellValue("Description: " + invoice.getDescription());
-    sheet.createRow(7).createCell(0).setCellValue("Creation date: " + invoice.getCreationDate());
+    sheet.createRow(4).createCell(0).setCellValue(messages.getMessage("text.invoice.details.data.invoice"));
+    sheet.createRow(5).createCell(0).setCellValue(messages.getMessage("text.invoice.reference").concat(": ") + invoice.getId());
+    sheet.createRow(6).createCell(0).setCellValue(messages.getMessage("text.invoice.description").concat(": ") + invoice.getDescription());
+    sheet.createRow(7).createCell(0).setCellValue(messages.getMessage("text.invoice.date").concat(": ") + invoice.getCreationDate());
     
     // Styling cells
     CellStyle theaderStyle = workbook.createCellStyle();
@@ -71,10 +76,10 @@ public class InvoiceXlsxView extends AbstractXlsxView {
     
     // Invoice's lines
     Row header = sheet.createRow(9);
-    header.createCell(0).setCellValue("Product");
-    header.createCell(1).setCellValue("Price");
-    header.createCell(2).setCellValue("Quantity");
-    header.createCell(3).setCellValue("Total");
+    header.createCell(0).setCellValue(messages.getMessage("text.invoice.line.product"));
+    header.createCell(1).setCellValue(messages.getMessage("text.invoice.line.product.price"));
+    header.createCell(2).setCellValue(messages.getMessage("text.invoice.line.quantity"));
+    header.createCell(3).setCellValue(messages.getMessage("text.invoice.line.total"));
     header.getCell(0).setCellStyle(theaderStyle);
     header.getCell(1).setCellStyle(theaderStyle);
     header.getCell(2).setCellStyle(theaderStyle);
@@ -113,7 +118,7 @@ public class InvoiceXlsxView extends AbstractXlsxView {
         
     Row invoiceTotalRow = sheet.createRow(invoiceLineRowNumber++);
     cell = invoiceTotalRow.createCell(2);
-    cell.setCellValue("Total: ");
+    cell.setCellValue(messages.getMessage("text.invoice.total").concat(": "));
     cell.setCellStyle(tbodyStyle);
     cell = invoiceTotalRow.createCell(3);
     cell.setCellValue(invoice.getTotal());
