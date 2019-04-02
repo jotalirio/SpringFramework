@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -11,6 +12,8 @@ import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
+
+import com.example.springboot.app.view.xml.ClientList;
 
 @Configuration
 public class MvcConfig implements WebMvcConfigurer {
@@ -84,6 +87,16 @@ public class MvcConfig implements WebMvcConfigurer {
   }
   
   
+  // This the conversor for XML Marshalling and Unmarshalling. We are going to use this Bean in our XML view to transform the Entity object into a XML document
+  // Marshalling: From object to XML document
+  // Unmarshalling: From XML document to object
+  @Bean
+  public Jaxb2Marshaller jaxb2Marshaller() {
+    Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
+    // List of object to be marshalled
+    marshaller.setClassesToBeBound(new Class[] {ClientList.class});
+    return marshaller;
+  }
 
   
   

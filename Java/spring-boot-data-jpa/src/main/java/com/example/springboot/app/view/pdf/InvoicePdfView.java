@@ -30,7 +30,7 @@ import com.lowagie.text.pdf.PdfWriter;
 
 // The view is resolved by BeanName -> ViewResolver 
 
-// Withou the extension '.pdf' works perfectly 
+// Without the extension '.pdf' works perfectly 
 //@Component("invoice/details")
 @Component("invoice/details.pdf")
 public class InvoicePdfView extends AbstractPdfView {
