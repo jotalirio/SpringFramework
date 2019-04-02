@@ -9,7 +9,8 @@
 			<div class="card-body">
 				<h4 class="card-title">
 					<a class="btn btn-light btn-xs" th:href="@{'/details/' + ${invoice.client.id}}" th:text="'&laquo; Back'"></a>
-					<a class="btn btn-danger btn-xs float-right" th:href="@{'/invoice/details/' + ${invoice.id}(format=pdf)}" th:text="'PDF'"></a>
+					<a class="btn btn-danger btn-xs float-right mx-2" th:href="@{'/invoice/details/' + ${invoice.id}(format=pdf)}" th:text="'PDF'"></a>
+					<a class="btn btn-success btn-xs float-right" th:href="@{'/invoice/details/' + ${invoice.id}(format=xlsx)}" th:text="'XLS'"></a>
 				</h4>
 				<ul class="list-group my-4">
 					<li class="list-group-item list-group-item-primary" th:text="'Customer information'"></li>
