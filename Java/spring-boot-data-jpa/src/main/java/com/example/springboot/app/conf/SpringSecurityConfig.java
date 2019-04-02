@@ -42,7 +42,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     
-    http.authorizeRequests().antMatchers("/", "/css/**", "/js/**", "/images/**", "/list", "/locale").permitAll()  // Public resources can be accessed by all users
+    // Changing the '/list' to '/list**' we are allowing the '/list-rest' URL path
+    http.authorizeRequests().antMatchers("/", "/css/**", "/js/**", "/images/**", "/list**", "/locale").permitAll()  // Public resources can be accessed by all users
                             /* .antMatchers("/details/**").hasAnyRole("USER") */                            // Defining rules by role
                             /* .antMatchers("/uploads/**").hasAnyRole("USER") */
                             /* .antMatchers("/create/**").hasAnyRole("ADMIN") */

@@ -1,6 +1,7 @@
 package com.example.springboot.app.controllers.impl;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -34,6 +35,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,6 +47,7 @@ import com.example.springboot.app.services.ClientService;
 import com.example.springboot.app.services.UploadFileService;
 import com.example.springboot.app.utils.Constants;
 import com.example.springboot.app.utils.paginator.PageRender;
+import com.example.springboot.app.view.xml.ClientList;
 
 @Controller
 // We are storing in the Session the client entity when we create new Client or update an existing one
@@ -64,6 +67,13 @@ public class ClientControllerImpl implements ClientController {
   @Autowired
   private MessageSource messageSource;
   
+  
+  // Handler method that returns directly a JSON
+  @GetMapping(value = "/list-rest")
+  @Override
+  public @ResponseBody ClientList listRest() {
+    return new ClientList(this.clientService.getClients());
+  }
   
     // Use this method with IClientDao or IClientDaoCrudRepository
 //  @RequestMapping(value = "/list", method = RequestMethod.GET)
