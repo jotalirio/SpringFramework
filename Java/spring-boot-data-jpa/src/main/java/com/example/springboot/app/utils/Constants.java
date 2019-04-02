@@ -16,6 +16,7 @@ public interface Constants {
   public static final String ATTRIBUTE_TITLE_VALUE_INVOICE_DETAILS = "Invoice Details: ";
   public static final String ATTRIBUTE_CLIENTS_KEY = "clients";
   public static final String ATTRIBUTE_CLIENT_KEY = "client";
+  public static final String ATTRIBUTE_CLIENT_LIST_KEY = "clientList";
   public static final String ATTRIBUTE_INVOICE_KEY = "invoice";
   public static final String ATTRIBUTE_FLASH_SUCCESS_KEY = "success";
   public static final String ATTRIBUTE_FLASH_ERROR_KEY = "error";

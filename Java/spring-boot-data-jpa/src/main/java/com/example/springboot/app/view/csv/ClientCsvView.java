@@ -16,7 +16,7 @@ import com.example.springboot.app.models.entity.Client;
 import com.example.springboot.app.utils.Constants;
 
 // We are going to export the Client list. So the name will be the same that the 'list.html' view
-// Without using the extension '.csv' works perfectly because we only have one ViewResolver linked to the 'list.html'
+// Without using the extension '.csv' it would work perfectly if we only have one ViewResolver linked to the 'list.html'
 //@Component("list")
 @Component("list.csv")
 public class ClientCsvView extends AbstractView {

@@ -30,23 +30,23 @@ public class Client implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  public Long id;
+  private Long id;
 
   @NotEmpty
-  public String name;
+  private String name;
 
   @NotEmpty
-  public String surname;
+  private String surname;
 
   @NotEmpty
   @Email
-  public String email;
+  private String email;
 
   @NotNull
   @Column(name = "creation_date")
   @Temporal(TemporalType.DATE)
   @DateTimeFormat(pattern = "dd-MM-yyyy")
-  public Date creationDate;
+  private Date creationDate;
 
   private String photo;
 
@@ -56,7 +56,7 @@ public class Client implements Serializable {
   // so we can fetch the invoices linked to a Client and the Client from a Invoice as well 
   // Automatically the foreign key 'client_id' pointing to 'clients' table is created inside of 'invoices' table
   @OneToMany(mappedBy = "client", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-  List<Invoice> invoices;
+  private List<Invoice> invoices;
 
   
   public Client() {

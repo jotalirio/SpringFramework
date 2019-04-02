@@ -90,6 +90,7 @@ public class MvcConfig implements WebMvcConfigurer {
   // This the conversor for XML Marshalling and Unmarshalling. We are going to use this Bean in our XML view to transform the Entity object into a XML document
   // Marshalling: From object to XML document
   // Unmarshalling: From XML document to object
+  // So this Bean will serialize a Client list into a XML file
   @Bean
   public Jaxb2Marshaller jaxb2Marshaller() {
     Jaxb2Marshaller marshaller = new Jaxb2Marshaller();

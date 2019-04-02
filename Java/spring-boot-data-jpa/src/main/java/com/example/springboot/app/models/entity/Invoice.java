@@ -20,6 +20,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotEmpty;
+import javax.xml.bind.annotation.XmlTransient;
 
 @Entity
 @Table(name = "invoices")
@@ -103,6 +104,12 @@ public class Invoice implements Serializable {
     this.creationDate = creationDate;
   }
 
+  // This annotation avoid this attribute inside the XML serialisation
+  // We need to do that because when the invoices are fetched then 
+  // the client is fetched another time and after that the invoices
+  // are fetched another time in this way until infinite... generating
+  // an infinite loop
+  @XmlTransient
   public Client getClient() {
     return client;
   }
