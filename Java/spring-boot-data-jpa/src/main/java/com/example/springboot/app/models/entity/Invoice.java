@@ -22,6 +22,8 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.NotEmpty;
 import javax.xml.bind.annotation.XmlTransient;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 @Table(name = "invoices")
 public class Invoice implements Serializable {
@@ -46,6 +48,7 @@ public class Invoice implements Serializable {
   // An invoice is related to only one Client but a Client may to have many invoices so many invoices linked to one Client
   // Automatically the foreign key 'client_id' is created on 'invoices' table
   // but optionally we can use the @JoinColumn annotation to specify explicit the foreign key 'client_id' on 'invoices' table
+  @JsonBackReference
   @ManyToOne(fetch = FetchType.LAZY)
 //  @JoinColumn(name = "client_id")
   private Client client;

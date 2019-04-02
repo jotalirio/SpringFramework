@@ -22,7 +22,8 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "Clients")
@@ -44,10 +45,12 @@ public class Client implements Serializable {
   @Email
   private String email;
 
+  // The @JsonFormat is used to format the creationDate field when we are creating the JSON export file
   @NotNull
   @Column(name = "creation_date")
   @Temporal(TemporalType.DATE)
   @DateTimeFormat(pattern = "dd-MM-yyyy")
+  @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
   private Date creationDate;
 
   private String photo;
@@ -63,7 +66,12 @@ public class Client implements Serializable {
   // the client is fetched another time and after that the invoices
   // are fetched another time in this way until infinite... generating
   // an infinite loop
-  @JsonIgnore
+    
+  // We are going to solve the infinite loop due to the relation between Client and Invoice using the @JasonManagedReference in the Client class
+  // and the annotation @JsonBackReference in the Invoice class
+  // In this way now we can show the Clients and their invoices inside the JSON avoiding the infinite loop
+  @JsonManagedReference
+  // @JsonIgnore
   @OneToMany(mappedBy = "client", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   private List<Invoice> invoices;
 
