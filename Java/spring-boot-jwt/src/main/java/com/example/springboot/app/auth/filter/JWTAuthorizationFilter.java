@@ -16,7 +16,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
-import com.example.springboot.app.auth.SimpleGrantedAuthoritiesMixin;
+import com.example.springboot.app.auth.SimpleGrantedAuthorityMixin;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.jsonwebtoken.Claims;
@@ -71,7 +71,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
       // Transforming from JSON to Object array: SimpleGrantedAuthority[] 
       // First parameter: the readValue() method expects the JSON content as a String: roles.toString().getBytes()
       // Second parameter: Array of Object implementing the GrantedAuthority interface: SimpleGrantedAuthority[].class
-      Collection<? extends GrantedAuthority> authorities = Arrays.asList(new ObjectMapper().addMixIn(SimpleGrantedAuthority.class, SimpleGrantedAuthoritiesMixin.class)
+      Collection<? extends GrantedAuthority> authorities = Arrays.asList(new ObjectMapper().addMixIn(SimpleGrantedAuthority.class, SimpleGrantedAuthorityMixin.class)
                                                                                            .readValue(roles.toString().getBytes(), SimpleGrantedAuthority[].class));
       
       // Creating the username-password authentication token.

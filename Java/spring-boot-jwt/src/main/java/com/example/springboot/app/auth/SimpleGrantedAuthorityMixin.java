@@ -3,7 +3,7 @@ package com.example.springboot.app.auth;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public abstract class SimpleGrantedAuthoritiesMixin {
+public abstract class SimpleGrantedAuthorityMixin {
 
   // Esta es nuestra marca para que se utilice este constructor a la hora de recuperar los objetos authorities (los roles) desde el JSON en la clase 'JWTAuthoritationFilter.java'
   // Collection<? extends GrantedAuthority> authorities = Arrays.asList(new ObjectMapper().readValue(roles.toString().getBytes(), SimpleGrantedAuthority[].class));
@@ -24,7 +24,7 @@ public abstract class SimpleGrantedAuthoritiesMixin {
   
   */
   @JsonCreator
-  public SimpleGrantedAuthoritiesMixin(@JsonProperty("authority") String role) {
+  public SimpleGrantedAuthorityMixin(@JsonProperty("authority") String role) {
 
     
   }
