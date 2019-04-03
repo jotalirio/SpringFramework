@@ -1,6 +1,8 @@
 package com.example.springboot.app.auth.filter;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,12 +15,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -85,13 +89,20 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
       Authentication authResult) throws IOException, ServletException {
 
     String username = ((User) authResult.getPrincipal()).getUsername();
+    Collection<? extends GrantedAuthority> roles = authResult.getAuthorities();
+    Claims claims = Jwts.claims();
+    claims.put("authorities", new ObjectMapper().writeValueAsString(roles)); // roles in JSON format
+    
     // Other way to get the 'username'
 //    String username = authResult.getName();
     
     // Creating the JWT token
     String jwtToken = Jwts.builder()
+                          .setClaims(claims)
                           .setSubject(username) 
                           .signWith(SignatureAlgorithm.HS512, "Some.Secret.Key.123456".getBytes())
+                          .setIssuedAt(new Date()) // Creation date
+                          .setExpiration(new Date(System.currentTimeMillis() + 14000400L)) // Expiration day, by default: Milliseconds + 3600000L (1 hour). 14000400 = 3600000 * 4 hours
                           .compact();
 
     // Passing the token in the response's 'Authorization' Header
