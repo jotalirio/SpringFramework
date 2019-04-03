@@ -44,7 +44,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
   protected void configure(HttpSecurity http) throws Exception {
     
     // Changing the '/list' to '/list**' we are allowing the '/list-rest' URL path
-    http.authorizeRequests().antMatchers("/", "/css/**", "/js/**", "/images/**", "/list**", "/locale", "/api/clients/**").permitAll()  // Public resources can be accessed by all users
+    http.authorizeRequests().antMatchers("/", "/css/**", "/js/**", "/images/**", "/list**", "/locale" /*, "/api/clients/**" */).permitAll()  // Public resources can be accessed by all users
                             /* .antMatchers("/details/**").hasAnyRole("USER") */  // -->  Defining rules by role
                             /* .antMatchers("/uploads/**").hasAnyRole("USER") */
                             /* .antMatchers("/create/**").hasAnyRole("ADMIN") */
@@ -53,6 +53,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                             /* .antMatchers("/invoice/**").hasAnyRole("ADMIN") */
                             /* .antMatchers("/products/**").hasAnyRole("ADMIN") */
                             .anyRequest().authenticated()
+                            /*  // Disabling the login form and logout features because now we are going to use JWT token for authentication
+                             *  // Now, if we try to access to the login page we get a 403 http forbidden error
+                             *  // Now, if we try to access to 'http:localhost:8080/api/clients/list' we get a 403 http forbidden error
                             .and()
                               .formLogin()
                                 .successHandler(this.successHandler) // We handle the login success event before to show the View. We are showing a login success message
@@ -62,6 +65,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                               .logout().permitAll() // Log out page allowed to all users 
                             .and()
                               .exceptionHandling().accessDeniedPage("/error_403")
+                            */
                             .and()
                             .csrf().disable() // We disable using Sessions because now we are using JWT tokens (STATELESS policy) so we are not going to use any more the 'csrf' session token protection used to send the forms in Spring. We have to be sure that we are not using explicitly this 'csrf' input in our forms
                             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
