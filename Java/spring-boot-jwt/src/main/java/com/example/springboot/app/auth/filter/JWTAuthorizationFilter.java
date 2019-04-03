@@ -1,8 +1,6 @@
 package com.example.springboot.app.auth.filter;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -11,25 +9,20 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
-import com.example.springboot.app.auth.SimpleGrantedAuthorityMixin;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
+import com.example.springboot.app.auth.service.JWTService;
 
 // This filter is executed for each HTTP Request when the 'Authorization' Header and then the 'Bearer' token are present. 
 // If the 'Authorization' Header is not present this filter will not be executed
 public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
-  public JWTAuthorizationFilter(AuthenticationManager authenticationManager) {
+  private JWTService jwtService;
+  
+  public JWTAuthorizationFilter(AuthenticationManager authenticationManager, JWTService jwtService) {
     super(authenticationManager);
-    // TODO Auto-generated constructor stub
+    this.jwtService = jwtService;
   }
 
   // We override this method from the abstract class 'BasicAuthenticationFilter.java' to work with JWT authentication and not with 'Basic' authentication 
@@ -46,36 +39,12 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
       return;
     }
     
-    // Getting the JWT token
-    boolean isTokenValid;
-    Claims jwtToken = null;
-    try {
-      
-      jwtToken = Jwts.parser()
-                     .setSigningKey("Some.Secret.Key.123456".getBytes())
-                     .parseClaimsJws(header.replace("Bearer ", "")) // parseClaimsJws() is making the JWT token validation. NOTE: Check the exceptions thrown by this method
-                     .getBody(); 
-      
-      isTokenValid = true;
-    }
-    catch (JwtException | IllegalArgumentException ex) {
-      isTokenValid = false;
-    }
-    
-    // Creating the username-password authentication token. Is a container that contains the credentials
-    // This is not the JWT token. It is a token managed internally by Spring Security. 
     UsernamePasswordAuthenticationToken authentication = null;
-    if (isTokenValid) {
-      String username = jwtToken.getSubject();
-      Object roles = jwtToken.get("authorities");
-      // Transforming from JSON to Object array: SimpleGrantedAuthority[] 
-      // First parameter: the readValue() method expects the JSON content as a String: roles.toString().getBytes()
-      // Second parameter: Array of Object implementing the GrantedAuthority interface: SimpleGrantedAuthority[].class
-      Collection<? extends GrantedAuthority> authorities = Arrays.asList(new ObjectMapper().addMixIn(SimpleGrantedAuthority.class, SimpleGrantedAuthorityMixin.class)
-                                                                                           .readValue(roles.toString().getBytes(), SimpleGrantedAuthority[].class));
-      
-      // Creating the username-password authentication token.
-      authentication = new UsernamePasswordAuthenticationToken(username, null, authorities);
+    // Validating the jwtToken
+    if (this.jwtService.validate(header)) {
+      // Creating the username-password authentication token. Is a container that contains the credentials
+      // This is not the JWT token. It is a token managed internally by Spring Security. 
+      authentication = new UsernamePasswordAuthenticationToken(this.jwtService.getUsername(header), null, this.jwtService.getRoles(header));
     }
 
     // We assign the authentication token inside the Security Context. This sentence authenticates the User inside the Http Request

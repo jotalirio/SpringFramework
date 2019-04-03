@@ -1,8 +1,6 @@
 package com.example.springboot.app.auth.filter;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,18 +13,14 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import com.example.springboot.app.auth.service.JWTService;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 
 // This filter is executed each time the User wants to log in
 // This filter is going to be called when a POST HTTP Request to '/login' path is done: We can see that inside the 'UsernamePasswordAuthenticationFilter.java' class
@@ -35,10 +29,11 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
   // The authentication manager will work with the authentication JPA provider implemented in 'JpaUserDetailsService.java' class
   // We need to pass the authentication manager (the component making the authentication using in this case 'JpaUserDetailsService.java'
   private AuthenticationManager authenticationManager;
+  private JWTService jwtService;
   
-  
-  public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
+  public JWTAuthenticationFilter(AuthenticationManager authenticationManager, JWTService jwtService) {
     this.authenticationManager = authenticationManager;
+    this.jwtService = jwtService;
     // Changing the URL to make the login, by default is an Http Request POST to '/login' path
     setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/api/login", "POST"));
   }
@@ -107,23 +102,8 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
   protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
       Authentication authResult) throws IOException, ServletException {
 
-    String username = ((User) authResult.getPrincipal()).getUsername();
-    Collection<? extends GrantedAuthority> roles = authResult.getAuthorities();
-    Claims claims = Jwts.claims();
-    claims.put("authorities", new ObjectMapper().writeValueAsString(roles)); // roles in JSON format
-    
-    // Other way to get the 'username'
-//    String username = authResult.getName();
-    
-    // The claims, username, issueAt, expiration date conforms the Pay Load part
     // Creating the JWT token
-    String jwtToken = Jwts.builder()
-                          .setClaims(claims)
-                          .setSubject(username) 
-                          .signWith(SignatureAlgorithm.HS512, "Some.Secret.Key.123456".getBytes())
-                          .setIssuedAt(new Date()) // Creation date
-                          .setExpiration(new Date(System.currentTimeMillis() + 14000400L)) // Expiration day, by default: Milliseconds + 3600000L (1 hour). 14000400 = 3600000 * 4 hours
-                          .compact();
+    String jwtToken = this.jwtService.create(authResult);
 
     // Passing the token in the response's 'Authorization' Header
     response.addHeader("Authorization", "Bearer ".concat(jwtToken));
@@ -132,7 +112,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     Map<String, Object> body = new HashMap<String, Object>();
     body.put("token", jwtToken);
     body.put("user", (User) authResult.getPrincipal()); // We pass the User (Principal) as well
-    body.put("message", String.format("Hi %s, you have logged in successfully !!!", username)); // We pass a success message
+    body.put("message", String.format("Hi %s, you have logged in successfully !!!", ((User) authResult.getPrincipal()).getUsername())); // We pass a success message
     
     // To pass this data into the response we need to retrieve the 'getWriter()'. We pass the 'body' as an JSON object
     response.getWriter().write(new ObjectMapper().writeValueAsString(body));

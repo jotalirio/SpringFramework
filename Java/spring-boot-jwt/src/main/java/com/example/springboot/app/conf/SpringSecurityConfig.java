@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.example.springboot.app.auth.filter.JWTAuthenticationFilter;
 import com.example.springboot.app.auth.filter.JWTAuthorizationFilter;
+import com.example.springboot.app.auth.service.JWTService;
 import com.example.springboot.app.services.impl.JpaUserDetailsService;
 
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
@@ -41,6 +42,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
   //Using JPA authentication
   private JpaUserDetailsService userDetailsService;
   
+  @Autowired
+  private JWTService jwtService;
   
   // Method for the HTTP Authorisation (routes) in order to give security to all our sections inside the Web site
   @Override
@@ -70,8 +73,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                               .exceptionHandling().accessDeniedPage("/error_403")
                             */
                             .and()
-                            .addFilter(new JWTAuthenticationFilter(authenticationManager())) // We register the JWT Authentication filter and we retrieve the authentication manager from the 'authenticationManager()' method located in 'WebSecurityConfigurerAdapter.java'
-                            .addFilter(new JWTAuthorizationFilter(authenticationManager())) // We register the JWT Authorization filter and we retrieve the authentication manager from the 'authenticationManager()' method located in 'WebSecurityConfigurerAdapter.java'
+                            .addFilter(new JWTAuthenticationFilter(authenticationManager(), this.jwtService)) // We register the JWT Authentication filter and we retrieve the authentication manager from the 'authenticationManager()' method located in 'WebSecurityConfigurerAdapter.java'
+                            .addFilter(new JWTAuthorizationFilter(authenticationManager(), this.jwtService)) // We register the JWT Authorization filter and we retrieve the authentication manager from the 'authenticationManager()' method located in 'WebSecurityConfigurerAdapter.java'
                             .csrf().disable() // We disable using Sessions because now we are using JWT tokens (STATELESS policy) so we are not going to use any more the 'csrf' session token protection used to send the forms in Spring. We have to be sure that we are not using explicitly this 'csrf' input in our forms
                             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
   }
