@@ -28,6 +28,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
+// This filter is executed each time the User wants to log in
 // This filter is going to be called when a POST HTTP Request to '/login' path is done: We can see that inside the 'UsernamePasswordAuthenticationFilter.java' class
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -69,7 +70,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
       com.example.springboot.app.models.entity.User user = null;
       try {
         
-        // We have to convert from JSON to Object
+        // We have to convert from JSON to Object: the User entity
         user = new ObjectMapper().readValue(request.getInputStream(), com.example.springboot.app.models.entity.User.class);
       
         // Getting User's data
