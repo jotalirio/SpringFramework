@@ -20,6 +20,8 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.jsonwebtoken.Claims;
@@ -56,17 +58,33 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 //    String username = request.getParameter("username");
 //    String password = request.getParameter("password");
 
-    if (username == null) {
-      username = "";
-    }
-
-    if (password == null) {
-      password = "";
-    }
-
     if (username != null && password != null) {
       logger.info("Username from request parameter (form-data): " + username);
       logger.info("Password from request parameter (form-data): " + password);
+    }
+    else { // For instance, when the data is sent in RAW data (not processed data, for instance, a JSON object with the username and password)
+      
+      // Transform the data from the request input stream
+      // Here we have the not processed data through 'request.getInputStream()'.
+      com.example.springboot.app.models.entity.User user = null;
+      try {
+        
+        // We have to convert from JSON to Object
+        user = new ObjectMapper().readValue(request.getInputStream(), com.example.springboot.app.models.entity.User.class);
+      
+        // Getting User's data
+        username = user.getUsername();
+        password = user.getPassword();
+        logger.info("Username from request parameter (raw): " + username);
+        logger.info("Password from request parameter (raw): " + password);
+        
+      } catch (JsonParseException e) {
+        e.printStackTrace();
+      } catch (JsonMappingException e) {
+        e.printStackTrace();
+      } catch (IOException e) {
+        e.printStackTrace();
+      } 
     }
     
     username = username.trim();
@@ -96,6 +114,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     // Other way to get the 'username'
 //    String username = authResult.getName();
     
+    // The claims, username, issueAt, expiration date conforms the Pay Load part
     // Creating the JWT token
     String jwtToken = Jwts.builder()
                           .setClaims(claims)
