@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+	<script type="text/javascript" th:fragment="autocomplete-javascript">
+	
+		$(document).ready(function(){
+			$("#search_product").autocomplete({
+				source: function(request, response) {
+					$.ajax({
+						url: "/products/load/" + request.term, // 'term' -> Represents the value entered by the user into the input of type text
+						dataType: "json",
+						data: { // We can pass the 'term' inside the 'dta:' field as a JSON object with the following structure:
+								// In this case the method type would be GET
+							term: request.term
+						},
+						success: function(data) { // This is the data (array) received from the REST service
+							response($.map(data, function(item) { // For each item in data returns a JSON object with the following structure:
+								return {
+									id: item.id,
+									label: item.name,
+									price: item.price
+								};
+							}));
+						}
+					});
+				},
+				select: function(event, ui) { // Doing some stuff when a product from the autocomplete list is selected. 
+											  // In our case when a product is selected we will put the product's name 
+											  // into the input type text and will create an invoice line
+					
+					// $("#search_product").val(ui.item.label);
+					
+					// We check if the product to be added to the table already exists. 
+					// In this case, we increase the current quantity and update the total amount
+					if(itemsHelper.hasProduct(ui.item.id)) {
+						itemsHelper.increaseQuantity(ui.item.id, ui.item.price);
+					}
+					else {
+						// Retrieve the HTML from 'invoice_lines_template.html' file. We are retrieving the HTML inside of <tbody> tag so the <tr> exactlly
+						var invoiceLine = $("#invoiceLinesTemplate").html();
+						
+						// Replacing values in the HTML template's code
+						invoiceLine = invoiceLine.replace(/{ID}/g, ui.item.id);
+						invoiceLine = invoiceLine.replace(/{NAME}/g, ui.item.label);
+						invoiceLine = invoiceLine.replace(/{PRICE}/g, ui.item.price);
+						
+						// Appending the result HTML to the table with id="loadInvoiceLines" <tbody> tag located inside of 'invoice/create.html' file
+						$("#loadInvoiceLines tbody").append(invoiceLine);
+						
+						// Calculating the invoice line Total Amount
+						itemsHelper.calculateInvoiceLineTotalAmount(ui.item.id, ui.item.price, 1);
+					}					
+					return false;
+				}
+			});
+			
+			// When the form is submitted we remove the 'invoice_lines_template.html' in order to not send this data. Is this data is sent then there will be 
+			// an error because the 'input type="hidden"' will be sent with a non numeric: 'value="{ID}"'
+			$("form").submit(function() {
+				$("#invoiceLinesTemplate").remove();
+				return;
+			});
+		});
+	
+		var itemsHelper = {
+			calculateInvoiceLineTotalAmount: function(id, price, quantity) {
+				$("#invoiceLine_total_amount_" + id).html(parseInt(price) * parseInt(quantity));
+				this.calculateInvoiceTotalAmount();
+			},
+			hasProduct: function(id) {
+				var exist = false;
+				$('input[name="invoiceLine_id[]"]').each(function() {
+					if(parseInt(id) === parseInt($(this).val())) {
+						exist = true;
+					}
+				});
+				return exist;
+			},
+			increaseQuantity: function(id, price) {
+				var quantity = $("#quantity_" + id).val() ? parseInt($("#quantity_" + id).val()) : 0;
+				$("#quantity_" + id).val(++quantity);
+				this.calculateInvoiceLineTotalAmount(id, price, quantity);
+			},
+			deleteInvoiceLine: function(id) {
+				$("#row_" + id).remove();
+				this.calculateInvoiceTotalAmount();
+			},
+			calculateInvoiceTotalAmount: function() {
+				var total = 0;
+				$('span[id^="invoiceLine_total_amount_"]').each(function(){
+					total += parseInt($(this).html());
+				});
+				$("#invoice_total_amount").html(total);
+			}
+		}
+	</script>
+</body>
+</html>
