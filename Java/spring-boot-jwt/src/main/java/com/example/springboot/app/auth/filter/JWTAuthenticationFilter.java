@@ -142,6 +142,23 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     
   }
 
+  // We override this method located inside the abstract class 'AbstractAuthenticationProcessingFilter.java'
+  // We are going to do something when the authentication process fails so we can managed authentication errors (for instance, 401, not authorized)
+  @Override
+  protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+      AuthenticationException failed) throws IOException, ServletException {
+    
+    Map<String, Object> body = new HashMap<String, Object>();
+    body.put("message", "Authentication ERROR: username or password incorrect !!!"); // Per security reason we do not indicate which parameter is the incorrect one
+    body.put("error", failed.getMessage()); // Original fail message
+
+    response.getWriter().write(new ObjectMapper().writeValueAsString(body));
+    response.setStatus(401);
+    response.setContentType("application/json");
+  }
+
+  
+  
   
   
   
