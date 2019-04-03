@@ -18,7 +18,8 @@ public class ClientRestControllerImpl implements ClientRestController {
   @Autowired
   private ClientService clientService;
   
-  
+  // Only a JWT token generated for a user with role ROLE_ADMIN can get authorization fot this resource
+//  @Secured("ROLE_ADMIN")
   @GetMapping(value = "/list")
   @Override
   public ClientList list() {
