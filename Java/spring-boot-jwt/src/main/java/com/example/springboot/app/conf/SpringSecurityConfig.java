@@ -9,7 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import com.example.springboot.app.auth.handler.LoginSuccessHandler;
+import com.example.springboot.app.auth.filter.JWTAuthenticationFilter;
 import com.example.springboot.app.services.impl.JpaUserDetailsService;
 
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
@@ -20,9 +20,11 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 //  private static final String QUERY_TO_FIND_USER_BY_USERNAME = "SELECT username, password, enabled FROM users WHERE username=?";
 //  private static final String QUERY_TO_FIND_USER_AUTHORITIES_BY_USERNAME = "SELECT u.username, a.authority FROM authorities a INNER JOIN users u ON (a.user_id=u.id) WHERE u.username=?";
 
-  
+  // Disabling the login form and logout features because now we are going to use JWT token for authentication
+  /*
   @Autowired
   private LoginSuccessHandler successHandler;
+  */
   
   // Using JDBC authentication
   // Injecting the Datasource to access to our 'users' and 'authorities' tables for JDBC authentication purpose
@@ -67,6 +69,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                               .exceptionHandling().accessDeniedPage("/error_403")
                             */
                             .and()
+                            .addFilter(new JWTAuthenticationFilter(authenticationManager())) // We register the JWT filter and we retrieve the authentication manager from the 'authenticationManager()' method located in 'WebSecurityConfigurerAdapter.java'
                             .csrf().disable() // We disable using Sessions because now we are using JWT tokens (STATELESS policy) so we are not going to use any more the 'csrf' session token protection used to send the forms in Spring. We have to be sure that we are not using explicitly this 'csrf' input in our forms
                             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
   }
