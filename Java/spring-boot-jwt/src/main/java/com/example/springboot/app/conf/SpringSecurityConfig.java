@@ -6,6 +6,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.example.springboot.app.auth.handler.LoginSuccessHandler;
@@ -56,11 +57,14 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                               .formLogin()
                                 .successHandler(this.successHandler) // We handle the login success event before to show the View. We are showing a login success message
                                 .loginPage("/login") // Configure the login page by setting up the '/login/ path from LoginController
-                              .permitAll() // Log in page allowed to all users 
+                                .permitAll() // Log in page allowed to all users 
                             .and()
                               .logout().permitAll() // Log out page allowed to all users 
                             .and()
-                              .exceptionHandling().accessDeniedPage("/error_403");
+                              .exceptionHandling().accessDeniedPage("/error_403")
+                            .and()
+                            .csrf().disable() // We disable using Sessions because now we are using JWT tokens (STATELESS policy) so we are not going to use any more the 'csrf' session token protection used to send the forms in Spring. We have to be sure that we are not using explicitly this 'csrf' input in our forms
+                            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
   }
 
   
