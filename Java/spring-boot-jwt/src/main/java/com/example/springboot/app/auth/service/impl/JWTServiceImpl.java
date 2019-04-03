@@ -10,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Base64Utils;
 
 import com.example.springboot.app.auth.SimpleGrantedAuthorityMixin;
 import com.example.springboot.app.auth.service.JWTService;
@@ -23,6 +24,11 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Component
 public class JWTServiceImpl implements JWTService {
 
+  public static final String SECRET = Base64Utils.encodeToString("Some.Secret.Key.123456".getBytes());
+  public static final long EXPIRATION_DATE = 14000400L;
+  public static final String JWT_TOKEN_PREFIX = "Bearer ";
+  public static final String HEADER_AUTHORIZATION = "Authorization";
+  
   @Override
   public String create(Authentication authResult) throws IOException {
     String username = ((User) authResult.getPrincipal()).getUsername();
@@ -38,9 +44,9 @@ public class JWTServiceImpl implements JWTService {
     String jwtToken = Jwts.builder()
                           .setClaims(claims)
                           .setSubject(username) 
-                          .signWith(SignatureAlgorithm.HS512, "Some.Secret.Key.123456".getBytes())
+                          .signWith(SignatureAlgorithm.HS512, SECRET.getBytes())
                           .setIssuedAt(new Date()) // Creation date
-                          .setExpiration(new Date(System.currentTimeMillis() + 14000400L)) // Expiration day, by default: Milliseconds + 3600000L (1 hour). 14000400 = 3600000 * 4 hours
+                          .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_DATE)) // Expiration day, by default: Milliseconds + 3600000L (1 hour). 14000400 = 3600000 * 4 hours
                           .compact();
     return jwtToken;
   }
@@ -62,7 +68,7 @@ public class JWTServiceImpl implements JWTService {
   @Override
   public Claims getClaims(String jwtToken) {
     // Getting the JWT token Claims
-    Claims jwtTokenClaims = Jwts.parser().setSigningKey("Some.Secret.Key.123456".getBytes())
+    Claims jwtTokenClaims = Jwts.parser().setSigningKey(SECRET.getBytes())
                                          .parseClaimsJws(this.resolve(jwtToken)) // parseClaimsJws() is making the JWT token validation. NOTE: Check the exceptions thrown by this method
                                          .getBody(); 
     return jwtTokenClaims;
@@ -86,8 +92,8 @@ public class JWTServiceImpl implements JWTService {
 
   @Override
   public String resolve(String jwtToken) {
-    if (jwtToken != null && jwtToken.startsWith("Bearer ")) {
-      return jwtToken.replace("Bearer ", "");
+    if (jwtToken != null && jwtToken.startsWith(JWT_TOKEN_PREFIX)) {
+      return jwtToken.replace(JWT_TOKEN_PREFIX, "");
     }
     return null;
   }

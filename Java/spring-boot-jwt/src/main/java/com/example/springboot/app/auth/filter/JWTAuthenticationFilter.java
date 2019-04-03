@@ -18,6 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.example.springboot.app.auth.service.JWTService;
+import com.example.springboot.app.auth.service.impl.JWTServiceImpl;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -106,7 +107,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     String jwtToken = this.jwtService.create(authResult);
 
     // Passing the token in the response's 'Authorization' Header
-    response.addHeader("Authorization", "Bearer ".concat(jwtToken));
+    response.addHeader(JWTServiceImpl.HEADER_AUTHORIZATION, JWTServiceImpl.JWT_TOKEN_PREFIX.concat(jwtToken));
     
     // It is a good practise to pass the JWT token in JSON format inside the response's Body
     Map<String, Object> body = new HashMap<String, Object>();

@@ -13,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import com.example.springboot.app.auth.service.JWTService;
+import com.example.springboot.app.auth.service.impl.JWTServiceImpl;
 
 // This filter is executed for each HTTP Request when the 'Authorization' Header and then the 'Bearer' token are present. 
 // If the 'Authorization' Header is not present this filter will not be executed
@@ -32,7 +33,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
       throws IOException, ServletException {
     
     // For instance: Bearer eyJhbGciOiJIUzUxMiJ9.eyJhdXRob3JpdGllcyI6Ilt7XCJhdXRob3JpdHlcIjpcIlJPTEVfQURNSU5cIn0se1wiYXV0aG9yaXR5XCI6XCJST0xFX1VTRVJcIn1dIiwic3ViIjoiYWRtaW4iLCJpYXQiOjE1NTQzMDQ3MDUsImV4cCI6MTU1NDMxODcwNn0.MBwTe_ZKJPWCcCy2Pyj9DqMk9IiSr-MwRUYk7GCGlk4WtY16q1fe8GfgGyM6GMW1H_D1VjO0jTuF7bFH8uVIew
-    String header = request.getHeader("Authorization");
+    String header = request.getHeader(JWTServiceImpl.HEADER_AUTHORIZATION);
     
     if (!this.requiresAuthentication(header)) {
       chain.doFilter(request, response);
@@ -58,7 +59,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
 
   // Custom function to check if the HTTP Request requires authentication
   private boolean requiresAuthentication(String header) {
-    if (header == null || !header.startsWith("Bearer ")) {
+    if (header == null || !header.startsWith(JWTServiceImpl.JWT_TOKEN_PREFIX)) {
       return false;
     }
     return true;
