@@ -7,6 +7,7 @@ import com.example.springboot.app.models.entity.Client;
 
 public interface ClientDaoPagingAndSortingRepository extends PagingAndSortingRepository<Client, Long> {
 
+ // Query at Entity level (HQL -> Hibernate Query Language), not at Table level
  // Using LEFT JOIN FETCH to get all the relations from Client in one shot: In this case his invoices
  @Query("SELECT c FROM Client c LEFT JOIN FETCH c.invoices i WHERE c.id=?1")
  public Client fetchByIdWithInvoices(Long id);
