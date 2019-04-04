@@ -1,11 +1,10 @@
-package com.example.springboot.app.dao;
+package com.example.springboot.backend.apirest.dao;
 
 import org.springframework.data.repository.CrudRepository;
-
-import com.example.springboot.app.models.entity.Client;
+import com.example.springboot.backend.apirest.models.entity.Client;
 
 // https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories.core-concepts
 // https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#jpa.query-methods.query-creation
-public interface ClientDaoCrudRepository extends CrudRepository<Client, Long>{
+public interface ClientDao extends CrudRepository<Client, Long> {
 
 }
