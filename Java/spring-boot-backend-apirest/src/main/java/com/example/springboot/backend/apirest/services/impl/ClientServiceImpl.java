@@ -16,10 +16,29 @@ public class ClientServiceImpl implements ClientService {
   @Autowired
   private ClientDao clientDao;
   
+  
   @Transactional(readOnly = true)
   @Override
   public List<Client> findAll() {
     return (List<Client>) this.clientDao.findAll();
+  }
+
+  @Transactional(readOnly = true)
+  @Override
+  public Client findById(Long id) {
+    return this.clientDao.findById(id).orElse(null);
+  }
+
+  @Transactional
+  @Override
+  public Client save(Client client) {
+    return this.clientDao.save(client);
+  }
+
+  @Transactional
+  @Override
+  public void delete(Long id) {
+    this.clientDao.deleteById(id);
   }
 
 }
