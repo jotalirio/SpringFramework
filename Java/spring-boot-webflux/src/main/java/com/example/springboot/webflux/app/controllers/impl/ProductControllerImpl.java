@@ -24,6 +24,7 @@ public class ProductControllerImpl implements ProductController {
   @Autowired
   private ProductDao productDao;
   
+
   @GetMapping({"/", "/list"})
   public String list(Model model) {
     Flux<Product> products = this.productDao.findAll().map(product -> {
@@ -73,5 +74,40 @@ public class ProductControllerImpl implements ProductController {
     model.addAttribute("products", new ReactiveDataDriverContextVariable(products, 2));
     model.addAttribute("title", "Products list");
     return "list";
+  }
+  
+  // En este metodo la estrategia a seguir para gestionar la contra presion es 'FULL', es decir, no se establece cantidad de buffer a la hora de devolver los
+  // datos del Stream desde el Observable hacia el Observador. Recomendada cuando tenemos poca cantidad de datos
+  @GetMapping("/list-full")
+  public String listFull(Model model) {
+    Flux<Product> products = this.productDao.findAll().map(product -> {
+      product.setName(product.getName().toUpperCase());
+      return product;
+    }).repeat(5000); // Simulando una cantidad muy grande de registros
+    
+    // Abrir una pestaña nueva en Chrome
+    //RESULT: Al ejecutar vemos en el Chrome Tools, pestaña Network -> Timing (opcion deshabilitar cache -> ok) que el campo TTFB (Time To First Byte tarda unos 4.7 segundos en recuperar el primer byte de datos)
+    
+    model.addAttribute("products", products); 
+    model.addAttribute("title", "Products list");
+    return "list";
+  }
+  
+  
+  // Estrategia 'Chunked' para gestionar la contra presion a la hora de devolver los datos desde el Observable hacia el Observador
+  // El siguiente caso se utiliza cuando el Stream es enorme, con miles y miles de elementos. El buffer se basa en bytes y no en cantidad de elementos
+  @GetMapping("/list-chunked")
+  public String listChunked(Model model) {
+    Flux<Product> products = this.productDao.findAll().map(product -> {
+      product.setName(product.getName().toUpperCase());
+      return product;
+    }).repeat(5000); // Simulando una cantidad muy grande de registros
+
+    // Abrir una pestaña nueva en Chrome
+    //RESULT:  Si vamos al 'application.properties' y habilitamos la strategia Chunked y luego volvemos ha cargar los datos veremos que el TTFB se ha reducido a 2.9 segundos.
+    
+    model.addAttribute("products", products); 
+    model.addAttribute("title", "Products list");
+    return "list-chunked";
   }
 }
