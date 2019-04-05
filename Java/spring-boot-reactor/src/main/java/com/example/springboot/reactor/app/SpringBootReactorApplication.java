@@ -1,5 +1,8 @@
 package com.example.springboot.reactor.app;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -187,37 +190,79 @@ public class SpringBootReactorApplication implements CommandLineRunner {
       
       
       // 4. Immutability
-      Flux<String> names = Flux.just("Jose Lirio", "Andres Gimenez", "Juan Perez", "Pedro Lopez", "Bruce Lee", "Bruce Willis");
-      names.map( name -> new User(name.split(" ")[0].toUpperCase(), name.split(" ")[1].toUpperCase())) 
-           .filter( user -> user.getName().toLowerCase().equals("bruce")) // With only one action the 'filter' operator make the 'return' automatically. Returns another Flux instance with the filtered objects
-           .doOnNext( user -> { 
-             if (user == null) { 
-               throw new RuntimeException("Name must be not empty.");
-             }
-             System.out.println(user.getName().concat(" ").concat(user.getSurname())); 
-           })
-           .map( user -> { 
-             String name = user.getName().toLowerCase();
-             user.setName(name);
-             return user;
-           });
+//      Flux<String> names = Flux.just("Jose Lirio", "Andres Gimenez", "Juan Perez", "Pedro Lopez", "Bruce Lee", "Bruce Willis");
+//      names.map( name -> new User(name.split(" ")[0].toUpperCase(), name.split(" ")[1].toUpperCase())) 
+//           .filter( user -> user.getName().toLowerCase().equals("bruce")) // With only one action the 'filter' operator make the 'return' automatically. Returns another Flux instance with the filtered objects
+//           .doOnNext( user -> { 
+//             if (user == null) { 
+//               throw new RuntimeException("Name must be not empty.");
+//             }
+//             System.out.println(user.getName().concat(" ").concat(user.getSurname())); 
+//           })
+//           .map( user -> { 
+//             String name = user.getName().toLowerCase();
+//             user.setName(name);
+//             return user;
+//           });
+//      
+//      names.subscribe( // Is making the subscribe over the Flux<String>
+//        user -> {
+//          LOGGER.info(user.toString());
+//        },
+//        error -> {
+//          LOGGER.error(error.getMessage());
+//        },
+//        new Runnable() {      
+//          @Override
+//          public void run() {
+//            System.out.println();
+//            LOGGER.info("The observable (Publisher) execution has finished succesfully !!!");
+//          }
+//        }
+//      );
+//      
+//      Flux<User> users = names.map( name -> new User(name.split(" ")[0].toUpperCase(), name.split(" ")[1].toUpperCase())) 
+//          .filter( user -> user.getName().toLowerCase().equals("bruce")) // With only one action the 'filter' operator make the 'return' automatically. Returns another Flux instance with the filtered objects
+//          .doOnNext( user -> { 
+//            if (user == null) { 
+//              throw new RuntimeException("Name must be not empty.");
+//            }
+//            System.out.println(user.getName().concat(" ").concat(user.getSurname())); 
+//          })
+//          .map( user -> { 
+//            String name = user.getName().toLowerCase();
+//            user.setName(name);
+//            return user;
+//          });
+//  
+//      users.subscribe(
+//        user -> {
+//          LOGGER.info(user.toString());
+//        },
+//        error -> {
+//          LOGGER.error(error.getMessage());
+//        },
+//        new Runnable() {      
+//          @Override
+//          public void run() {
+//            System.out.println();
+//            LOGGER.info("The observable (Publisher) execution has finished succesfully !!!");
+//          }
+//        }
+//      );
       
-      names.subscribe( // Is making the subscribe over the Flux<String>
-        user -> {
-          LOGGER.info(user.toString());
-        },
-        error -> {
-          LOGGER.error(error.getMessage());
-        },
-        new Runnable() {      
-          @Override
-          public void run() {
-            System.out.println();
-            LOGGER.info("The observable (Publisher) execution has finished succesfully !!!");
-          }
-        }
-      );
       
+      
+      // 5. Creating a reactive stream from another objects List, Collection, Iterable, etc... any object implementing the 'Iterable' inteface
+      List<String> usersList = new ArrayList<>();
+      usersList.add("Jose Lirio");
+      usersList.add("Andres Gimenez");
+      usersList.add("Juan Perez");
+      usersList.add("Pedro Lopez");
+      usersList.add("Bruce Lee");
+      usersList.add("Bruce Willis");
+      
+      Flux<String> names = Flux.fromIterable(usersList);
       Flux<User> users = names.map( name -> new User(name.split(" ")[0].toUpperCase(), name.split(" ")[1].toUpperCase())) 
           .filter( user -> user.getName().toLowerCase().equals("bruce")) // With only one action the 'filter' operator make the 'return' automatically. Returns another Flux instance with the filtered objects
           .doOnNext( user -> { 
