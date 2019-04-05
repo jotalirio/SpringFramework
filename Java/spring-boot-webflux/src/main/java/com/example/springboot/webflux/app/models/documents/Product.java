@@ -15,6 +15,17 @@ public class Product {
   private Double price;
   private Date creationDate;
 
+  // This constructor will be manage by Springframwork (spring-data-mongodb).
+  // Spring-data needs this constructor to create the instances
+  public Product() { }
+
+
+  public Product(String name, Double price) {
+    this.name = name;
+    this.price = price;
+  }
+
+  
   public String getId() {
     return id;
   }
