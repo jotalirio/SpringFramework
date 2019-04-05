@@ -6,6 +6,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import com.example.springboot.reactor.app.models.User;
+
 import reactor.core.publisher.Flux;
 
 // To transform this SpringBoot app as a Console application we have to implement the 'CommandLineRunner' interface
@@ -60,34 +62,95 @@ public class SpringBootReactorApplication implements CommandLineRunner {
      
     
     // When the subscription is completed (when the flux finish to send until the last element) we can do some tasks
-    Flux<String> names = Flux.just("Jose", "Andres", "Juan", "Pedro")
-                             .doOnNext(e -> { 
-                                if (e.isEmpty()) { // We are going to throw this exception when an element will be empty
-                                  throw new RuntimeException("Name must be not empty.");
-                                }
-                                System.out.println(e); 
-                             });
+//    Flux<String> names = Flux.just("Jose", "Andres", "Juan", "Pedro")
+//                             .doOnNext(e -> { 
+//                                if (e.isEmpty()) { // We are going to throw this exception when an element will be empty
+//                                  throw new RuntimeException("Name must be not empty.");
+//                                }
+//                                System.out.println(e); 
+//                             });
+//
+//    names.subscribe(
+//      e -> {
+//        LOGGER.info(e);
+//      },
+//      error -> {
+//        LOGGER.error(error.getMessage());
+//      },
+//      new Runnable() { // Instance from anonymous class of type Runnable. This object is instantiated when the subscription is finished      
+//        @Override
+//        public void run() {
+//          System.out.println();
+//          LOGGER.info("The observable (Publisher) execution has finished succesfully !!!");
+//        }
+//      }
+//    );
+//    
+//    
+//    
+      // 1. Using the operators. Each operator returns a new Flux instance because the original one is immutable
+//      Flux<String> names = Flux.just("Jose", "Andres", "Juan", "Pedro")
+//                               .map( e -> { // The operator 'map' always returns a value. Returns another Flux instance with the names in UpperCase
+//                                 return e.toUpperCase();
+//                               })
+//                               .doOnNext(e -> { // The doOnNext() method is managing each name but in UpperCase because of the first map
+//                                 if (e.isEmpty()) { 
+//                                   throw new RuntimeException("Name must be not empty.");
+//                                 }
+//                                 System.out.println(e); 
+//                               })
+//                               .map( e -> { // In this case is returning another Flux instance with the names in LowerCase
+//                                 return e.toLowerCase();
+//                               });
+//
+//      names.subscribe(
+//        e -> {
+//          LOGGER.info(e);
+//        },
+//        error -> {
+//          LOGGER.error(error.getMessage());
+//        },
+//        new Runnable() {      
+//          @Override
+//          public void run() {
+//            System.out.println();
+//            LOGGER.info("The observable (Publisher) execution has finished succesfully !!!");
+//          }
+//        }
+//      );
+      
+      
+      
+      // 2. Using the operators. Each operator returns a new Flux instance because the original one is immutable
+      Flux<User> names = Flux.just("Jose", "Andres", "Juan", "Pedro")
+                               .map( name -> new User(name.toUpperCase(), null)) // With only one action the 'map' operator make the 'return' automatically
+                               .doOnNext( user -> { // The doOnNext() method is managing each 'User' element from the first map
+                                 if (user == null) { 
+                                   throw new RuntimeException("Name must be not empty.");
+                                 }
+                                 System.out.println(user.getName()); 
+                               })
+                               .map( user -> { // In this case is returning another Flux instance containing the 'User' objects with the names in LowerCase
+                                 String name = user.getName().toLowerCase();
+                                 user.setName(name);
+                                 return user;
+                               });
 
-    names.subscribe(
-      e -> {
-        LOGGER.info(e);
-      },
-      error -> {
-        LOGGER.error(error.getMessage());
-      },
-      new Runnable() { // Instance from anonymous class of type Runnable. This object is instantiated when the subscription is finished      
-        @Override
-        public void run() {
-          System.out.println();
-          LOGGER.info("The observable (Publisher) execution has finished succesfully !!!");
-          
+      names.subscribe(
+        user -> {
+          LOGGER.info(user.toString());
+        },
+        error -> {
+          LOGGER.error(error.getMessage());
+        },
+        new Runnable() {      
+          @Override
+          public void run() {
+            System.out.println();
+            LOGGER.info("The observable (Publisher) execution has finished succesfully !!!");
+          }
         }
-      }
-    );
-    
-    
-    
-    
+      );
   }
 
 }
