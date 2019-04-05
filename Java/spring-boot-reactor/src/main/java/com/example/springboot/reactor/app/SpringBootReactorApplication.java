@@ -154,8 +154,71 @@ public class SpringBootReactorApplication implements CommandLineRunner {
       
       
       // 3. Using the operators. Each operator returns a new Flux instance because the original one is immutable
-      Flux<User> names = Flux.just("Jose Lirio", "Andres Gimenez", "Juan Perez", "Pedro Lopez", "Bruce Lee", "Bruce Willis")
-          .map( name -> new User(name.split(" ")[0].toUpperCase(), name.split(" ")[1].toUpperCase())) 
+//      Flux<User> names = Flux.just("Jose Lirio", "Andres Gimenez", "Juan Perez", "Pedro Lopez", "Bruce Lee", "Bruce Willis")
+//          .map( name -> new User(name.split(" ")[0].toUpperCase(), name.split(" ")[1].toUpperCase())) 
+//          .filter( user -> user.getName().toLowerCase().equals("bruce")) // With only one action the 'filter' operator make the 'return' automatically. Returns another Flux instance with the filtered objects
+//          .doOnNext( user -> { 
+//            if (user == null) { 
+//              throw new RuntimeException("Name must be not empty.");
+//            }
+//            System.out.println(user.getName().concat(" ").concat(user.getSurname())); 
+//          })
+//          .map( user -> { 
+//            String name = user.getName().toLowerCase();
+//            user.setName(name);
+//            return user;
+//          });
+//
+//      names.subscribe(
+//        user -> {
+//          LOGGER.info(user.toString());
+//        },
+//        error -> {
+//          LOGGER.error(error.getMessage());
+//        },
+//        new Runnable() {      
+//          @Override
+//          public void run() {
+//            System.out.println();
+//            LOGGER.info("The observable (Publisher) execution has finished succesfully !!!");
+//          }
+//        }
+//      );
+      
+      
+      // 4. Immutability
+      Flux<String> names = Flux.just("Jose Lirio", "Andres Gimenez", "Juan Perez", "Pedro Lopez", "Bruce Lee", "Bruce Willis");
+      names.map( name -> new User(name.split(" ")[0].toUpperCase(), name.split(" ")[1].toUpperCase())) 
+           .filter( user -> user.getName().toLowerCase().equals("bruce")) // With only one action the 'filter' operator make the 'return' automatically. Returns another Flux instance with the filtered objects
+           .doOnNext( user -> { 
+             if (user == null) { 
+               throw new RuntimeException("Name must be not empty.");
+             }
+             System.out.println(user.getName().concat(" ").concat(user.getSurname())); 
+           })
+           .map( user -> { 
+             String name = user.getName().toLowerCase();
+             user.setName(name);
+             return user;
+           });
+      
+      names.subscribe( // Is making the subscribe over the Flux<String>
+        user -> {
+          LOGGER.info(user.toString());
+        },
+        error -> {
+          LOGGER.error(error.getMessage());
+        },
+        new Runnable() {      
+          @Override
+          public void run() {
+            System.out.println();
+            LOGGER.info("The observable (Publisher) execution has finished succesfully !!!");
+          }
+        }
+      );
+      
+      Flux<User> users = names.map( name -> new User(name.split(" ")[0].toUpperCase(), name.split(" ")[1].toUpperCase())) 
           .filter( user -> user.getName().toLowerCase().equals("bruce")) // With only one action the 'filter' operator make the 'return' automatically. Returns another Flux instance with the filtered objects
           .doOnNext( user -> { 
             if (user == null) { 
@@ -168,8 +231,8 @@ public class SpringBootReactorApplication implements CommandLineRunner {
             user.setName(name);
             return user;
           });
-
-      names.subscribe(
+  
+      users.subscribe(
         user -> {
           LOGGER.info(user.toString());
         },
