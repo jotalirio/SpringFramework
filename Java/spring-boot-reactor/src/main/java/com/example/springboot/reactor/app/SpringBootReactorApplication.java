@@ -38,26 +38,56 @@ public class SpringBootReactorApplication implements CommandLineRunner {
     
     
     // Managing errors triggered from the observable (Publisher) to the observator that is subscribe to this observable reactive stream
-    Flux<String> names = Flux.just("Jose", "Andres", "", "Juan", "Pedro")
+//    Flux<String> names = Flux.just("Jose", "Andres", "", "Juan", "Pedro")
+//                             .doOnNext(e -> { 
+//                                 if (e.isEmpty()) { // We are going to throw this exception when an element will be empty
+//                                   throw new RuntimeException("Name must be not empty.");
+//                                 }
+//                                 System.out.println(e); 
+//                             });
+//
+//    // We manage the subscribe method like in Angular 7
+//    names.subscribe(
+//      e -> {
+//        LOGGER.info(e);
+//      },
+//      error -> {
+//        // The error will be done when the observable (Publisher) is throwing the Exception. At this moment the stream is disrupted (interrumpido)
+//        // out application will be still running as usual. Only the stream will be stopped
+//        LOGGER.error(error.getMessage());
+//      }
+//    ); 
+     
+    
+    // When the subscription is completed (when the flux finish to send until the last element) we can do some tasks
+    Flux<String> names = Flux.just("Jose", "Andres", "Juan", "Pedro")
                              .doOnNext(e -> { 
-                                 if (e.isEmpty()) { // We are going to throw this exception when an element will be empty
-                                   throw new RuntimeException("Name must be not empty.");
-                                 }
-                                 System.out.println(e); 
+                                if (e.isEmpty()) { // We are going to throw this exception when an element will be empty
+                                  throw new RuntimeException("Name must be not empty.");
+                                }
+                                System.out.println(e); 
                              });
 
-    // We manage the subscribe method like in Angular 7
     names.subscribe(
       e -> {
         LOGGER.info(e);
       },
       error -> {
-        // The error will be done when the observable (Publisher) is throwing the Exception. At this moment the stream is disrupted (interrumpido)
-        // out application will be still running as usual. Only the stream will be stopped
         LOGGER.error(error.getMessage());
+      },
+      new Runnable() { // Instance from anonymous class of type Runnable. This object is instantiated when the subscription is finished      
+        @Override
+        public void run() {
+          System.out.println();
+          LOGGER.info("The observable (Publisher) execution has finished succesfully !!!");
+          
+        }
       }
-    ); 
-     
+    );
+    
+    
+    
+    
   }
 
 }
